@@ -1,6 +1,6 @@
 package com.example.workmate.dto;
 
-public class LoginForm {
+public class RegisterForm {
 	private String loginId;
 	private String password;
 	private String mail;

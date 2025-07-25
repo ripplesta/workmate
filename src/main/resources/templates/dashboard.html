@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>メニュー画面</title>
+</head>
+<body>
+    <h1>ようこそ！<span th:text="${session.loginUser.userName}"></span>さん！</h1>
+
+    <p>ログイン中のメールアドレス：<span th:text="${user.mail}">email@gmail.com</span></p>
+
+    <a th:href="@{/tasks}">タスク管理</a>
+    <a th:href="@{/userinfo}">ユーザー情報</a>
+    <a th:href="@{/calendar}">カレンダーで表示</a>
+    <a th:href="@{/chatbot}">チャットbotページ</a>
+    <a th:href="@{/logout}">ログアウト</a>
+</body>
+</html>
