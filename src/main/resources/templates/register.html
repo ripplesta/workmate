@@ -6,7 +6,7 @@
 <body>
     <h1>新規ユーザー登録画面</h1>
 
-    <form th:action="@{/register}" th:object="${/registerForm}" method="post">
+    <form th:action="@{/register}" th:object="${registerForm}" method="post">
         <table>
             <tr><th>ログインID：</th><td><input type="text" th:field="*{loginId}" /></td></tr>
             <tr><th>パスワード：</th><td><input type="password" th:field="*{password}"/></td></tr>
@@ -17,6 +17,6 @@
         <a th:href="@{/home}">ホームに戻る</a>
     </form>
 
-    <p th:if="${errorMessage}" th:text="${errorMassage}" style="color:red"></p>
+    <p th:if="${errorMessage}" th:text="${errorMessage}" style="color:red"></p>
 </body>
 </html>

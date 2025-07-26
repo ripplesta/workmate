@@ -30,12 +30,14 @@ public class RegisterController {
 			return "register";
 		}
 		
+		//入力データをインスタンスに格納
 		Account newUser = new Account();
 		newUser.setLoginId(registerForm.getLoginId());
 		newUser.setPassword(registerForm.getPassword());
 		newUser.setMail(registerForm.getMail());
 		newUser.setUserName(registerForm.getUserName());
 		
+		//入っているデータをDBに保存
 		accountRepository.save(newUser);
 		
 		//ここは一旦ホームにしているが登録が完了しましたという画面を挟む予定
