@@ -20,18 +20,35 @@
 
 #### 学びメモ
 - `@アノテーション` により、クラスやメソッドに役割や制約を指定できる
-- @EntityはJavaクラスをDBテーブルに対応させる。@Tableでテーブル名をマッピングしたり@Columnでエンティティを定義して自動生成したりできる
-- @Idで主キー指定や@GenerationType.IDENTITYで主キー値を自動で割り当てる
-- Modelはコントローラーからビューへ値を渡すための入れ物(Mapのようなもの)
-- addAttribute("キー", 値)で文字列やオブジェクトなどを渡せる
-- html側は"${キー}"で受け取る  
-  (例　model.addAttribute("title", "ログインページ") → <h1 th:text="${title}</h1> <!-- ログインページ -->
-- HttpSession でセッション管理ができる(例：session.setAttribute("loginUser", account)でセッションに保存
-- session.getAttribute("loginUser")でセッションから値を取得
-  → Account loginUser = (Account)session.getAttribute("loginUser")など型変換が必要
-- HTML側で使うときはth:text="${session.loginUser.userName}"とsession.を使って属性にアクセス
-- session.invalidate()でセッション破棄
-- return "redirect:/htmlファイル名"でそのページにリダイレクト
+- `@Entity`はJavaクラスをDBテーブルに対応させる。`@Table`でテーブル名をマッピングしたり`@Column`でエンティティを定義して自動生成したりできる
+- `@Id`で主キー指定や`@GenerationType.IDENTITY`で主キー値を自動で割り当てる
+- `Model`はコントローラーからビューへ値を渡すための入れ物(Mapのようなもの)
+- `addAttribute("キー", 値)`で文字列やオブジェクトなどを渡せる
+- html側は`"${キー}"`で受け取る  
+  (例　`model.addAttribute("title", "ログインページ")` → `<h1 th:text="${title}</h1>` <!-- ログインページ -->
+- `HttpSession` でセッション管理ができる(例：`session.setAttribute("loginUser", account)`でセッションに保存
+- `session.getAttribute("loginUser")`でセッションから値を取得
+  → `Account loginUser = (Account)session.getAttribute("loginUser")`など型変換が必要
+- HTML側で使うときは`th:text="${session.loginUser.userName}"`と`session.`を使って属性にアクセス
+- `session.invalidate()`でセッション破棄
+- `return "redirect:/html`ファイル名"でそのページにリダイレクト
+
+##### リポジトリの`extends JpaRepository<Account, Long>`の説明
+- Spring Data JPA を使ってデータベースアクセスを行う 
+- `Account`は対象となるエンティティ(テーブル)
+- `Long{はそのエンティティの主キー(@Idで指定された)の型  
+これを継承することで  
+- `findAll()` → 全件取得
+- `findById(id)` → IDで1件取得
+- `save(entity)` → 新規登録 or 更新
+- `delete(entity)` → 削除
+- `count()` → レコード数の取得　が使用できるようになる
+- このインターフェースで`Account`テーブルに対して基本的なCRUD操作が使えるようになる(実装不要)
+- 自動でSQLが作られ、ログインID検索なども簡単に書ける
+##### `findByLoginId(String loginId)`
+Spting Data JPAのメソッド名でクエリ生成という仕組みを使ってloginIdで検索する処理を自動生成する  
+  → SELECT * FROM account WHERE login_id = ?　を自動でやってくれている  
+
 
 ### 「新規ユーザー登録」実装記録
 - 
