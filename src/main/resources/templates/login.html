@@ -16,6 +16,8 @@
                 <td><input type="password" th:field="*{password}" placeholder="パスワード" required /></td>
             </tr>
         </table>
+        <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}"></div>
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
 
         <div th:if="${loginError}" style="color:red;">
             <p th:text="${loginError}"></p>

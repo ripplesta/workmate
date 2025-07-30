@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,7 +31,12 @@ public class LoginController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@ModelAttribute LoginForm loginForm, HttpSession session, Model model) {
+	public String login(@ModelAttribute @Validated LoginForm loginForm,BindingResult bindingResult, HttpSession session, Model model) {
+		
+		//入力エラーがあれば戻る
+		if(bindingResult.hasErrors()) {
+			return "login";
+		}
 		
 		Optional<Account> optionalAccount = accountRepository.findByLoginId(loginForm.getLoginId());
 		
@@ -37,12 +44,13 @@ public class LoginController {
 			Account account = optionalAccount.get();
 			
 			
+			//入力されたパスワードとDBに保存されているパスワードを照合してtrueならアカウント情報をセッションに保存してメニュー画面へ
 			if(account.getPassword().equals(loginForm.getPassword())) {
 				session.setAttribute("loginUser", account);
 				return "redirect:/dashboard";
 			}
 		}
-		
+		//
 		model.addAttribute("loginError", "ユーザー名またはパスワードが違います");
 		return "login";	
 	}
