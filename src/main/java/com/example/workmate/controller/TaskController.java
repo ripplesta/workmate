@@ -30,7 +30,7 @@ public class TaskController {
 		
 		Long userId = loginUser.getUserId();
 		
-		List<Task> taskList = taskRepository.findByUserId(userId);
+		List<Task> taskList = taskRepository.findByUserId(Account.getUserId);
 		
 		model.addAttribute("tasks", taskList);
 		
