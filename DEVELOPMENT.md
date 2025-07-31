@@ -51,5 +51,11 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 
 
 ### 「新規ユーザー登録」実装記録
-- 
+- 新規登録ページから入力された情報を受け取る
+- `@PostMapping`で受け取りDBに同じ値があればログインIDは使用されていますと返す
+- 同じ値がなければDBに保存して完了する
 
+#### 学びメモ
+- `findByLoginId(registerForm.getLoginId())`でDBからログインIDをみて`.isPresent()`で同じ値があるか確認し、あったらログインIDは使用されているとエラーを返す
+- なければインスタンスを作成し受け取った情報を格納していく。
+- `accountRepository.save(newUser)`で格納されているデータをDBに保存
