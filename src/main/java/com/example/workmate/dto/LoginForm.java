@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Size;
 
 public class LoginForm {
 	
+	//基本的にHTML側から入力されたりする情報を一時的に格納して使う
 	//ログインIDとパスワードに空欄と指定の文字数以外だとエラーになる処理を付与
 	@NotBlank(message = "ログインIDを入力してください")
 	@Size(min = 3, max = 30, message = "ログインIDは3～30文字で入力してください")
@@ -12,8 +13,8 @@ public class LoginForm {
 	@NotBlank(message = "パスワードを入力してください")
 	@Size(min = 6, message = "パスワードは6文字以上で入力してください")
 	private String password;
-	private String mail;
-	private String userName;
+	//private String mail;
+	//private String userName;
 	
 	public String getLoginId() {
 		return loginId;
@@ -29,7 +30,7 @@ public class LoginForm {
 		this.password = password;
 	}
 	
-	public String getMail() {
+	/*public String getMail() {
 		return mail;
 	}
 	public void setMail(String mail) {
@@ -42,6 +43,7 @@ public class LoginForm {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	*/
 
 	
 }

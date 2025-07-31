@@ -31,7 +31,7 @@ public class LoginController {
 	}
 	
 	@PostMapping("/login")
-	public String login(@ModelAttribute @Validated LoginForm loginForm,BindingResult bindingResult, HttpSession session, Model model) {
+	public String login(@ModelAttribute @Validated LoginForm loginForm, BindingResult bindingResult, HttpSession session, Model model) {
 		
 		//入力エラーがあれば戻る
 		if(bindingResult.hasErrors()) {
