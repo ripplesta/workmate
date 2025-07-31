@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:tj="http://www.thymeleaf.org">
+<head>
+    <title>タスク管理</title>
+</head>
+<body>
+    <h1>タスク一覧</h1>
+    <table border="1">
+        <tr>
+            <th>タイトル</th>
+            <th>内容</th>
+            <th>締め切り</th>
+        </tr>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.dueDate}"></td>
+        </tr>
+    </table>
+</body>
+</html>

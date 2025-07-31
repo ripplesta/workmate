@@ -32,9 +32,9 @@ public class TaskController {
 		
 		List<Task> taskList = taskRepository.findByUserId(userId);
 		
-		model.addAttribute("taskList", taskList);
+		model.addAttribute("tasks", taskList);
 		
-		return "tasks";
+		return "tasklist";
 	}
 
 }
