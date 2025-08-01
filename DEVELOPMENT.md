@@ -26,6 +26,7 @@
 - `addAttribute("キー", 値)`で文字列やオブジェクトなどを渡せる
 - html側は`"${キー}"`で受け取る  
   (例　`model.addAttribute("title", "ログインページ")` → `<h1 th:text="${title}</h1>` <!-- ログインページ -->
+- `@ModelAttributeを付与するとフォームなどから入力されたデータをオブジェクトに保存してコントローラーで処理できる
 - `HttpSession` でセッション管理ができる(例：`session.setAttribute("loginUser", account)`でセッションに保存
 - `session.getAttribute("loginUser")`でセッションから値を取得
   → `Account loginUser = (Account)session.getAttribute("loginUser")`など型変換が必要
