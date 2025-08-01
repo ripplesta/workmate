@@ -25,6 +25,7 @@ public class RegisterController {
 	
 	@PostMapping("/register")
 	public String registerUser(@ModelAttribute RegisterForm registerForm, Model model) {
+		//入力された情報のログインIDがDBに保存されているログインIDと重複していたらエラーメッセージを表示する
 		if(accountRepository.findByLoginId(registerForm.getLoginId()).isPresent()) {
 			model.addAttribute("errorMessage", "このログインIDは使用されています");
 			return "register";
