@@ -68,5 +68,5 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 
 #### 学びメモ
 - とりあえず最初はログインしているユーザーごとにタスクを表示させるようにした
-- エンティティに`@ManyToOne``@JoinColumn(name = "user_id")`でアカウントテーブルの`user_id`を外部キーにする
+- エンティティに`@ManyToOne`、`@JoinColumn(name = "user_id")`でアカウントテーブルの`user_id`を外部キーにする
 - セッションに保存されている情報を取得して`findByUser(loginUser)`でユーザーIDが一致しているタスクの情報をDBから持ってきてhtml側に渡し表示する
