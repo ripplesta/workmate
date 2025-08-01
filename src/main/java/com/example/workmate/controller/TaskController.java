@@ -51,10 +51,10 @@ public class TaskController {
 	
 	@PostMapping("/create")
 	public String createTask(@ModelAttribute TaskForm taskForm, HttpSession session, Model model) {
-		//Account loginUser = (Account)session.getAttribute("loginUser");
+		Account loginUser = (Account)session.getAttribute("loginUser");
 		
 		Task createTask = new Task();
-		//createTask.setUser(session..getUserId());
+		createTask.setUser(loginUser.getUserId());
 		createTask.setTitle(taskForm.getTitle());
 		createTask.setDescription(taskForm.getDescription());
 		createTask.setDueDate(taskForm.getDueDate());
