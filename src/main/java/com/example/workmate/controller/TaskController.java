@@ -64,5 +64,10 @@ public class TaskController {
 		return "tasklist";
 	}
 	
-
+	@GetMapping("/edit")
+	public String editTaskForm(Model model){
+		model.addAttribute("editTaskForm", new taskForm());
+		return "edittask";
 }
+
+	
