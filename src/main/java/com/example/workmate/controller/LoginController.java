@@ -23,7 +23,7 @@ public class LoginController {
 	@Autowired
 	private AccountRepository accountRepository;
 	
-　//このページにアクセスした時にこのメソッドが実行される
+    //このページにアクセスした時にこのメソッドが実行される
 	@GetMapping("/login")
 	public String login(Model model) {
 		
@@ -34,12 +34,15 @@ public class LoginController {
 	@PostMapping("/login")
 	public String login(@ModelAttribute @Validated LoginForm loginForm, BindingResult bindingResult, HttpSession session, Model model) {
 		
+		
 		//入力エラーがあれば戻る
 		if(bindingResult.hasErrors()) {
 			return "login";
 		}
+		
 		//ログインしたときにDBに保存されているそのログインIDと同じものの情報をインスタンスに格納
 		Optional<Account> optionalAccount = accountRepository.findByLoginId(loginForm.getLoginId());
+
 		
 		if(optionalAccount.isPresent()){
 			Account account = optionalAccount.get();
@@ -51,15 +54,17 @@ public class LoginController {
 				return "redirect:/dashboard";
 			}
 		}
+		
 		//上のifがtrueでなければログインエラーを返し遷移しない
 		model.addAttribute("loginError", "ユーザー名またはパスワードが違います");
 		return "login";	
 	}
+	
 	//ログアウトすることときにinvalidateでセッション情報を破棄する
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-　//ログアウトするときにログアウトしますかと表示するかログアウト画面に遷移させようか考えている
+		//ログアウトするときにログアウトしますかと表示するかログアウト画面に遷移させようか考えている
 		return "redirect:/login";
 	}
 

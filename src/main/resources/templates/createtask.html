@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>タスク登録</title>
+</head>
+<body>
+    <h1>タスク登録画面</h1>
+    
+    <form th:action="@{/create}" th:object="${taskForm}" method="post">
+    <div input type="text" th:field="*{title}">タイトルを入力</div>
+    <div input type="textarea" th:field="*{description}">内容</div>
+    <div input type="date" th:field="*{dueDate}"></div>
+    <button type="submit">登録</button>
+    </form>
+</body>
+</html>

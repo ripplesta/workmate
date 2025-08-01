@@ -20,7 +20,7 @@ public class Task {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String title;
-	private String discription;
+	private String description;
 	private String status;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dueDate;
@@ -29,7 +29,7 @@ public class Task {
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
-	private Account account;
+	private Account user;
 	
 	@PrePersist
 	public void prePersist() {
@@ -57,12 +57,12 @@ public class Task {
 		this.title = title;
 	}
 
-	public String getDiscription() {
-		return discription;
+	public String getDescription() {
+		return description;
 	}
 
-	public void setDiscription(String discription) {
-		this.discription = discription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public String getStatus() {
@@ -97,12 +97,12 @@ public class Task {
 		this.updatedAt = updatedAt;
 	}
 
-	public Account getAccount() {
-		return account;
+	public Account getUser() {
+		return user;
 	}
 
-	public void setAccount(Account account) {
-		this.account = account;
+	public void setUser(Account user) {
+		this.user = user;
 	}
 
 }

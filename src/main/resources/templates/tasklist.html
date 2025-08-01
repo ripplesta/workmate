@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:tj="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>タスク管理</title>
 </head>
@@ -17,5 +17,8 @@
             <td th:text="${task.dueDate}"></td>
         </tr>
     </table>
+    <a th:href="@{/tasks/new}">タスクを登録</a>
+    <a th:href="@{/tasks/edit/{userId}}">タスクを編集</a>
+    <a th:href="@{/tasks/delete/{userId}}">タスクを削除</a>
 </body>
 </html>

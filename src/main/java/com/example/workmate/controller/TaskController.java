@@ -8,18 +8,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.Task;
+import com.example.workmate.dto.TaskForm;
 import com.example.workmate.repository.TaskRepository;
 
 @Controller
+@RequestMapping("/tasks")
 public class TaskController {
 	
 	@Autowired
 	private TaskRepository taskRepository;
 	
-	@GetMapping("/tasks")
+	@GetMapping
 	public String showTaskList(HttpSession session, Model model) {
 		
 		Account loginUser = (Account) session.getAttribute("loginUser");
@@ -29,13 +34,35 @@ public class TaskController {
 			return "redirect:/home";
 		}
 		
-		Long userId = loginUser.getUserId();
+		//Long userId = loginUser.getUserId();
 		
-		List<Task> taskList = taskRepository.findByUserId(Account.getUserId);
+		List<Task> taskList = taskRepository.findByUser(loginUser);
 		
 		model.addAttribute("tasks", taskList);
 		
 		return "tasklist";
 	}
+	
+	@GetMapping("/new")
+	public String newTaskForm(Model model) {
+		model.addAttribute("taskForm", new TaskForm());
+		return "createtask";
+	}
+	
+	@PostMapping("/create")
+	public String createTask(@ModelAttribute TaskForm taskForm, HttpSession session, Model model) {
+		//Account loginUser = (Account)session.getAttribute("loginUser");
+		
+		Task createTask = new Task();
+		//createTask.setUser(session..getUserId());
+		createTask.setTitle(taskForm.getTitle());
+		createTask.setDescription(taskForm.getDescription());
+		createTask.setDueDate(taskForm.getDueDate());
+		
+		taskRepository.save(createTask);
+		
+		return "tasklist";
+	}
+	
 
 }
