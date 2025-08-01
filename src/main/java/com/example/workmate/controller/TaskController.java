@@ -24,6 +24,7 @@ public class TaskController {
 		
 		Account loginUser = (Account) session.getAttribute("loginUser");
 		
+		//ログイン情報がなければホーム画面にリダイレクト
 		if(loginUser == null) {
 			return "redirect:/home";
 		}
