@@ -7,10 +7,21 @@
     <h1>タスク登録画面</h1>
     
     <form th:action="@{/create}" th:object="${taskForm}" method="post">
-    <div input type="text" th:field="*{title}">タイトルを入力</div>
-    <div input type="textarea" th:field="*{description}">内容</div>
-    <div input type="date" th:field="*{dueDate}"></div>
-    <button type="submit">登録</button>
+    <div> 
+        <label for="title">タイトル：</label>
+        <input type="text" th:field="*{title}" id="title" placeholder="タイトルを入力" />
+    </div>
+    <div>
+        <label for="description">内容：</label>
+        <textarea th:field="*{description}" id="description" rows="5" cols="40" placeholder="内容を入力"></textarea>
+    </div>
+    <div>
+        <label for="dueDate">期限：</label>
+        <input type="date" th:field="*{dueDate}" id="dueDate" />
+    </div>
+    <div>
+        <button type="submit">登録</button>
+    </div>
     </form>
 </body>
 </html>

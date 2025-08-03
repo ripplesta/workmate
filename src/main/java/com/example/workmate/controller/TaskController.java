@@ -38,6 +38,7 @@ public class TaskController {
 		
 		List<Task> taskList = taskRepository.findByUser(loginUser);
 		
+		
 		model.addAttribute("tasks", taskList);
 		
 		return "tasklist";
@@ -51,10 +52,13 @@ public class TaskController {
 	
 	@PostMapping("/create")
 	public String createTask(@ModelAttribute TaskForm taskForm, HttpSession session, Model model) {
+		
 		Account loginUser = (Account)session.getAttribute("loginUser");
 		
+		//フォームから送られてきたデータをDBに保存
 		Task createTask = new Task();
-		createTask.setUser(loginUser.getUserId());
+		//userIdは現在のセッションから取得し保存
+		createTask.setUser(loginUser);
 		createTask.setTitle(taskForm.getTitle());
 		createTask.setDescription(taskForm.getDescription());
 		createTask.setDueDate(taskForm.getDueDate());
@@ -64,10 +68,11 @@ public class TaskController {
 		return "tasklist";
 	}
 	
-	@GetMapping("/edit")
+	@GetMapping("/edit/{id}")
 	public String editTaskForm(Model model){
-		model.addAttribute("editTaskForm", new taskForm());
+		model.addAttribute("editTaskForm", new TaskForm());
 		return "edittask";
+	}
 }
 
 	
