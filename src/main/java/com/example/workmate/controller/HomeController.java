@@ -8,7 +8,7 @@ public class HomeController {
 	
 	@GetMapping("/home")
 	public String showHome() {
-		//home.htmlにアクセスする
+		//resources/templates/home.htmlにアクセスする
 		return "home";
 	}
 
