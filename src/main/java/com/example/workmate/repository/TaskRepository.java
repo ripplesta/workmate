@@ -10,5 +10,6 @@ import com.example.workmate.domain.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 	List<Task> findByUser(Account account);
+    List<Task> findById(Long id);
 
 }
