@@ -4,9 +4,11 @@
     <title>タスク登録</title>
 </head>
 <body>
-    <h1>タスク登録画面</h1>
+    <h1 th:if="${taskForm.id == null}">タスク登録画面</h1>
+    <h1 th:if="${taskForm.id != null}">タスク編集画面</h1>
     
-    <form th:action="@{/create}" th:object="${taskForm}" method="post">
+    <form th:action="@{${taskForm.id == null} ? 'create' : 'update'}" 
+          th:object="${taskForm}" method="post">
     <div> 
         <label for="title">タイトル：</label>
         <input type="text" th:field="*{title}" id="title" placeholder="タイトルを入力" />
@@ -20,7 +22,7 @@
         <input type="date" th:field="*{dueDate}" id="dueDate" />
     </div>
     <div>
-        <button type="submit">登録</button>
+        <button type="submit" th:text="${taskForm.id == null} ? '登録' : '更新'">登録</button>
     </div>
     </form>
 </body>

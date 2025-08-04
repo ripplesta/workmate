@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>タスク管理</title>
+</head>
+<body>
+    <h1>タスク一覧</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>タイトル</th>
+                <th>内容</th>
+                <th>締め切り</th>
+                <th>作成日</th>
+                <th>更新日</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.title}"></td>
+                <td th:text="${task.description}"></td>
+                <td th:text="${#temporals.format(task.dueDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${#temporals.format(task.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${#temporals.format(task.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+        
+                <td> 
+                    <a th:href="@{'/tasks/edit/' + ${task.id}}">タスクを編集</a>
+                    <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" style="display:inline">
+                        <input type="button" value="削除" onclick="return confirm('本当に削除しますか？');">
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/tasks/new}">タスクを登録</a>
+    
+</body>
+</html>

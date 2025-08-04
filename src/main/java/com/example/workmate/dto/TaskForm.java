@@ -6,7 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import com.example.workmate.domain.Task;
+
 public class TaskForm {
+	
+	private Long id;
 	@NotBlank
 	private String title;
 	
@@ -15,6 +19,29 @@ public class TaskForm {
 	
 	@NotNull
 	private LocalDate dueDate;
+	
+	//デフォルトコンストラクタ
+	public TaskForm() {
+		
+	}
+	
+	//引数ありのコンストラクタ
+	//TaskFormにデータを渡すために必要
+	public TaskForm(Task task) {
+		this.id = task.getId();
+		this.title = task.getTitle();
+		this.description = task.getDescription();
+		this.dueDate = task.getDueDate();
+		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getTitle() {
 		return title;

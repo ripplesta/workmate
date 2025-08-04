@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -25,7 +26,7 @@ public class TaskController {
 	private TaskRepository taskRepository;
 	
 	//tasksにアクセスするとここが実行される
-	@GetMapping
+	@GetMapping("/tasklist")
 	public String showTaskList(HttpSession session, Model model) {
 		
 		Account loginUser = (Account) session.getAttribute("loginUser");
@@ -42,14 +43,14 @@ public class TaskController {
 		
 		model.addAttribute("tasks", taskList);
 		
-		return "tasklist";
+		return "tasks/tasklist";
 	}
 	
 	//登録を押すとここが実行されて登録フォームに遷移する
 	@GetMapping("/new")
 	public String newTaskForm(Model model) {
 		model.addAttribute("taskForm", new TaskForm());
-		return "createtask";
+		return "tasks/taskform";
 	}
 	
 	//登録フォームで入力された情報が送られる
@@ -68,25 +69,32 @@ public class TaskController {
 		
 		taskRepository.save(createTask);
 		
-		return "tasklist";
+		return "redirect:/tasks/tasklist";
 	}
 	
 	//タスク各々にidが割り振られていて編集したいタスクのidを0送って編集フォームに遷移する
 	@GetMapping("/edit/{id}")
 	public String editTaskForm(@PathVariable Long id, Model model){
+		//タスクがあればtaskに格納、なくてもorElseThrow()で例外を投げる
 		Task task = taskRepository.findById(id).orElseThrow();
-		model.addAttribute("editTaskForm", Task);
-		return "edittask";
+		TaskForm taskForm = new TaskForm(task);
+		model.addAttribute("taskForm", taskForm);
+		return "tasks/taskform";
 	}
 
 	//編集フォームの更新データをDBに保存する
-	@PosrMapping("/edit/update")
+	@PostMapping("/edit/update")
 	public String updateTask(@ModelAttribute Task task){
 		taskRepository.save(task);
-		return "redirect:/tasklist";
+		return "redirect:/tasks/tasklist";
 	}
 
-	@GetMapping("/delete")
+	@PostMapping("/delete/{id}")
+	public String deleteTask(@PathVariable Long id) {
+		Task task = taskRepository.findById(id).orElseThrow();
+		taskRepository.delete(task);
+		return "redirect:/tasks/tasklist";
+	}
 }
 
 	
