@@ -25,7 +25,7 @@ public class TaskController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
-	//tasksにアクセスするとここが実行される
+	//ここがタスク一覧でtasklistにアクセスするとここが実行される
 	@GetMapping("/tasklist")
 	public String showTaskList(HttpSession session, Model model) {
 		
@@ -66,6 +66,9 @@ public class TaskController {
 		createTask.setTitle(taskForm.getTitle());
 		createTask.setDescription(taskForm.getDescription());
 		createTask.setDueDate(taskForm.getDueDate());
+		createTask.setStatus(taskForm.getStatus());
+		createTask.setPrioriry(taskForm.getPriority());
+			createTask.setCategory(taskForm.getCategory());
 		
 		taskRepository.save(createTask);
 		
