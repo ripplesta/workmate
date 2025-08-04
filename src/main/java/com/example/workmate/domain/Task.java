@@ -26,6 +26,9 @@ public class Task {
 	private LocalDate dueDate;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+
+	private String priority;
+	private String category;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
