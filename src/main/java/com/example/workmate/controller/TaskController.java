@@ -71,7 +71,7 @@ public class TaskController {
 		return "tasklist";
 	}
 	
-	//タスク各々にidが割り振られていて編集したいタスクのidを送って編集フォームに遷移する
+	//タスク各々にidが割り振られていて編集したいタスクのidを0送って編集フォームに遷移する
 	@GetMapping("/edit/{id}")
 	public String editTaskForm(@PathVariable Long id, Model model){
 		Task task = taskRepository.findById(id).orElseThrow();
@@ -84,6 +84,9 @@ public class TaskController {
 	public String updateTask(@ModelAttribute Task task){
 		taskRepository.save(task);
 		return "redirect:/tasklist";
+	}
+
+	@GetMapping("/delete")
 }
 
 	
