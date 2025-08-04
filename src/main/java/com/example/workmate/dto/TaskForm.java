@@ -19,6 +19,10 @@ public class TaskForm {
 	
 	@NotNull
 	private LocalDate dueDate;
+
+	private String status;
+	private String priority;
+	private String category;
 	
 	//デフォルトコンストラクタ
 	public TaskForm() {
@@ -32,7 +36,10 @@ public class TaskForm {
 		this.title = task.getTitle();
 		this.description = task.getDescription();
 		this.dueDate = task.getDueDate();
-		
+		this.status = task.getStatus();
+		this.priority = task.getPriority();
+		this.category = task.getCategory();
+
 	}
 
 	public Long getId() {
