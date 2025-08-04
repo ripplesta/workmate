@@ -69,8 +69,9 @@ public class TaskController {
 	}
 	
 	@GetMapping("/edit/{id}")
-	public String editTaskForm(Model model){
-		model.addAttribute("editTaskForm", new TaskForm());
+	public String editTaskForm(@PathVariable Long id, Model model){
+		Task task = taskRepository.findById(id);
+		model.addAttribute("editTaskForm", Task);
 		return "edittask";
 	}
 }
