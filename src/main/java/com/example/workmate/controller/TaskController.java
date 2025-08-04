@@ -24,6 +24,7 @@ public class TaskController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
+	//tasksにアクセスするとここが実行される
 	@GetMapping
 	public String showTaskList(HttpSession session, Model model) {
 		
@@ -44,12 +45,14 @@ public class TaskController {
 		return "tasklist";
 	}
 	
+	//登録を押すとここが実行されて登録フォームに遷移する
 	@GetMapping("/new")
 	public String newTaskForm(Model model) {
 		model.addAttribute("taskForm", new TaskForm());
 		return "createtask";
 	}
 	
+	//登録フォームで入力された情報が送られる
 	@PostMapping("/create")
 	public String createTask(@ModelAttribute TaskForm taskForm, HttpSession session, Model model) {
 		
@@ -68,12 +71,19 @@ public class TaskController {
 		return "tasklist";
 	}
 	
+	//タスク各々にidが割り振られていて編集したいタスクのidを送って編集フォームに遷移する
 	@GetMapping("/edit/{id}")
 	public String editTaskForm(@PathVariable Long id, Model model){
-		Task task = taskRepository.findById(id);
+		Task task = taskRepository.findById(id).orElseThrow();
 		model.addAttribute("editTaskForm", Task);
 		return "edittask";
 	}
+
+	//編集フォームの更新データをDBに保存する
+	@PosrMapping("/edit/update")
+	public String updateTask(@ModelAttribute Task task){
+		taskRepository.save(task);
+		return "redirect:/tasklist";
 }
 
 	
