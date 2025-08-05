@@ -67,8 +67,8 @@ public class TaskController {
 		createTask.setDescription(taskForm.getDescription());
 		createTask.setDueDate(taskForm.getDueDate());
 		createTask.setStatus(taskForm.getStatus());
-		createTask.setPrioriry(taskForm.getPriority());
-			createTask.setCategory(taskForm.getCategory());
+		createTask.setPriority(taskForm.getPriority());
+		createTask.setCategory(taskForm.getCategory());
 		
 		taskRepository.save(createTask);
 		

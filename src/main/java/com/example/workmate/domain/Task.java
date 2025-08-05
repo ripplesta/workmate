@@ -24,11 +24,12 @@ public class Task {
 	private String status;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dueDate;
+	private String priority;
+	private String category;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 
-	private String priority;
-	private String category;
+	
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -82,6 +83,22 @@ public class Task {
 
 	public void setDueDate(LocalDate dueDate) {
 		this.dueDate = dueDate;
+	}
+
+	public String getPriority() {
+		return priority;
+	}
+
+	public void setPriority(String priority) {
+		this.priority = priority;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
 	}
 
 	public LocalDateTime getCreatedAt() {
