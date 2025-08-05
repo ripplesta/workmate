@@ -79,4 +79,7 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 - エンティティに`@ManyToOne`、`@JoinColumn(name = "user_id")`でアカウントテーブルの`user_id`を外部キーにする
 - セッションに保存されている情報を取得して`findByUser(loginUser)`でユーザーIDが一致しているタスクの情報をDBから持ってきてhtml側に渡し表示する
 - 1つのコントローラーに登録、編集、削除の処理を実装した
-- 登録時に
+- 登録時にフォームから送られてきたデータをDBに保存する時userIdだけは現在のセッション情報から持ってくる
+- フォームは同じものをform th:action=をつかって登録か編集かを判断して表示させる  
+  → form th:action="${taskForm.id == null ? @{(/tasks/create)} : @{(/tasks/edit/update)}"でidに何も入ってなければ登録、入っていれば編集になる  
+ 他の記述もth:ifで分岐させてどっちかを表示されるなどが可能
