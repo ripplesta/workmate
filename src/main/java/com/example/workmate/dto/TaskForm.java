@@ -1,6 +1,7 @@
 package com.example.workmate.dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ public class TaskForm {
 	private String status;
 	private String priority;
 	private String category;
+	private LocalDateTime createdAt;
 	
 	//デフォルトコンストラクタ
 	public TaskForm() {
@@ -96,6 +98,14 @@ public class TaskForm {
 
 	public void setCategory(String category) {
 		this.category = category;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 }

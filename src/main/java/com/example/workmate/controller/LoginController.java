@@ -25,7 +25,12 @@ public class LoginController {
 	
     //このページにアクセスした時にこのメソッドが実行される
 	@GetMapping("/login")
-	public String login(Model model) {
+	public String login(HttpSession session, Model model) {
+		Account loginUser = (Account)session.getAttribute("loginUser");
+		
+		if(loginUser != null) {
+			return "redirect:/dashboard";
+		}
 		
 		model.addAttribute("loginForm", new LoginForm());
 		return "login";

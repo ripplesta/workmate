@@ -14,6 +14,8 @@ import jakarta.persistence.PreUpdate;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.example.workmate.dto.TaskForm;
+
 @Entity
 public class Task {
 	@Id
@@ -43,6 +45,38 @@ public class Task {
 	@PreUpdate
 	public void preUpdate() {
 		this.updatedAt = LocalDateTime.now();
+	}
+	
+	//デフォルトコンストラクタ
+	public Task() {
+		
+	}
+	
+	//引数ありのコンストラクタ　
+	//タスクフォームから送られてきたデータをTaskに格納するために必要
+	/*public Task(TaskForm form) {
+		this.id = form.getId();
+		this.title = form.getTitle();
+		this.description = form.getDescription();
+		this.dueDate = form.getDueDate();
+		this.status = form.getStatus();
+		this.priority = form.getPriority();
+		this.category = form.getCategory();
+		this.createdAt = form.getCreatedAt();
+		
+	}*/
+	//タスクフォームからのデータを静的メソッドで引き渡す
+	public static Task fromForm(TaskForm form) {
+		Task task = new Task();
+		task.setId(form.getId());
+		task.setTitle(form.getTitle());
+		task.setDescription(form.getDescription());
+		task.setDueDate(form.getDueDate());
+		task.setStatus(form.getStatus());
+		task.setPriority(form.getPriority());
+		task.setCategory(form.getCategory());
+		task.setCreatedAt(form.getCreatedAt());
+		return task;
 	}
 
 	public Long getId() {

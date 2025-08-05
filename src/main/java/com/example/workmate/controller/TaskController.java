@@ -87,7 +87,10 @@ public class TaskController {
 
 	//編集フォームの更新データをDBに保存する
 	@PostMapping("/edit/update")
-	public String updateTask(@ModelAttribute Task task){
+	public String updateTask(@ModelAttribute TaskForm taskForm){
+		//送られてきたデータをTaskに格納
+		Task task = Task.fromForm(taskForm);
+		//task = taskRepository.findById(taskForm.getId()).orElseThrow(() -> new RuntimeException("該当タスクなし"));
 		taskRepository.save(task);
 		return "redirect:/tasks/tasklist";
 	}
