@@ -90,6 +90,10 @@ public class TaskController {
 	public String updateTask(@ModelAttribute TaskForm taskForm){
 		//送られてきたデータをTaskに格納
 		Task task = Task.fromForm(taskForm);
+		
+		//まだ未完成　一旦Spring Securityの導入をするので
+		//ここはまだ解決していない
+		//現状はuserIdが渡せていないのでDBに新規登録になってしまっている
 		//task = taskRepository.findById(taskForm.getId()).orElseThrow(() -> new RuntimeException("該当タスクなし"));
 		taskRepository.save(task);
 		return "redirect:/tasks/tasklist";
