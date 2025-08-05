@@ -11,6 +11,9 @@
                 <th>タイトル</th>
                 <th>内容</th>
                 <th>締め切り</th>
+                <th>進捗状況</th>
+                <th>優先度</th>
+                <th>カテゴリ</th>
                 <th>作成日</th>
                 <th>更新日</th>
                 <th>操作</th>
@@ -21,6 +24,16 @@
                 <td th:text="${task.title}"></td>
                 <td th:text="${task.description}"></td>
                 <td th:text="${#temporals.format(task.dueDate, 'yyyy-MM-dd')}"></td>
+                <td><select th:field="*{status}">
+                    <option value="NotStarted">未着手</option>
+                    <option value="InProgless">進行中</option>
+                    <option value="Completed">完了</option>
+                </select></td>
+                <td><select th:field="*{priority}">
+                    <option value="High">高</option>
+                    <option value="Middle">中</option>
+                    <option value="Low">低</option>
+                </select></td>
                 <td th:text="${#temporals.format(task.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                 <td th:text="${#temporals.format(task.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
         
