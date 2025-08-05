@@ -25,7 +25,13 @@
 - `Model`はコントローラーからビューへ値を渡すための入れ物(Mapのようなもの)
 - `addAttribute("キー", 値)`で文字列やオブジェクトなどを渡せる
 - html側は`"${キー}"`で受け取る  
-  (例　`model.addAttribute("title", "ログインページ")` → `<h1 th:text="${title}</h1>` <!-- ログインページ -->
+  (例　`model.addAttribute("title", "ログインページ")`
+  → `<h1 th:text="${title}</h1>` <!-- ログインページ -->
+- `"*{キー}"`はフォーム用でth:objectで指定されたオブジェクトを基準にしてアクセスできる  
+  (例　コントローラー側`addAttribute("loginForm",new LoginForm())`
+  → HTML側`<form th:action="@{/login}" th:object="${loginForm}"`
+   `<input type="text" th:field="*{loginId}" />`  
+  これで`*{loginId}` ← `taskForm.getLoginId()`にバインドされる)  
 - `@ModelAttribute`を付与するとフォームなどから入力されたデータを指定したオブジェクトに保存してコントローラーで処理できる
 - `HttpSession` でセッション管理ができる(例：`session.setAttribute("loginUser", account)`でセッションに保存
 - `session.getAttribute("loginUser")`でセッションから値を取得
