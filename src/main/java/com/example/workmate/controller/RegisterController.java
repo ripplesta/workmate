@@ -1,6 +1,7 @@
 package com.example.workmate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,9 @@ public class RegisterController {
 	
 	@Autowired
 	private AccountRepository accountRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	@GetMapping("/register")
 	public String register(Model model) {
@@ -34,7 +38,7 @@ public class RegisterController {
 		//入力データをインスタンスに格納
 		Account newUser = new Account();
 		newUser.setLoginId(registerForm.getLoginId());
-		newUser.setPassword(registerForm.getPassword());
+		newUser.setPassword(passwordEncoder.encode(registerForm.getPassword()));
 		newUser.setMail(registerForm.getMail());
 		newUser.setUserName(registerForm.getUserName());
 		

@@ -21,7 +21,7 @@ public class Account {
 	private Long userId;
 	@Column(name = "login_id", length = 30, nullable = false)
 	private String loginId;
-	@Column(name = "password", length = 30, nullable = false)
+	@Column(name = "password", length = 100, nullable = false)
 	private String password;
 	@Column(name = "mail", length = 255)
 	private String mail;

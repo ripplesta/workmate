@@ -5,23 +5,22 @@
 </head>
 <body>
     <h2>ログイン</h2>
-    <form th:action="@{/login}" method="post" th:object="${loginForm}">
+    <form th:action="@{/login}" method="post">
         <table>
             <tr>
                 <th>ログインID：</th>
-                <td><input type="text" th:field="*{loginId}" placeholder="ログインID" required /></td>
+                <td><input type="text" name="loginId" placeholder="ログインID" required /></td>
             </tr>
             <tr>
                 <th>パスワード：</th>
-                <td><input type="password" th:field="*{password}" placeholder="パスワード" required /></td>
+                <td><input type="password" name="password" placeholder="パスワード" required /></td>
             </tr>
         </table>
-        <div th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}" style="color:red;"></div>
-        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" style="color:red;"></div>
-
-        <div th:if="${loginError}" style="color:red;">
-            <p th:text="${loginError}"></p>
+        
+        <div th:if="${param.error}" style="color:red;">
+            ログインIDまたはパスワードが違います
         </div>
+
         <button type="submit">ログイン</button>
         <a th:href="@{/home}">ホームに戻る</a>
     </form>
