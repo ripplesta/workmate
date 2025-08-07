@@ -1,0 +1,13 @@
+@Service
+public class AccountUserDetailsService implements UserDetailsService {
+	
+	@Autowired
+	private AccountRepository accountRepository;
+
+	@Override
+	public UserDetails loadUserByUsername(String loginId) throw UsernameNotFoundException {
+		return accountRepository.findByLoginId(loginId)
+						.map(AccountUserDetails::new)
+						.orElseThrow(() -> new UsernameNotFoundException("ユーザーが見つかりません"));
+		}
+}
