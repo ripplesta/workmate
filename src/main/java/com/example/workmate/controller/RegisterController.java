@@ -19,7 +19,7 @@ public class RegisterController {
 	private AccountRepository accountRepository;
 	
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/register")
 	public String register(Model model) {
