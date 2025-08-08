@@ -9,6 +9,7 @@
     
     <form th:action="${taskForm.id == null} ? @{/tasks/create} : @{/tasks/edit/update}" 
           th:object="${taskForm}" method="post">
+        <input type="hidden" id="id" value="${taskForm.id}">
     <div> 
         <label for="title">タイトル：</label>
         <input type="text" th:field="*{title}" id="title" placeholder="タイトルを入力" />
