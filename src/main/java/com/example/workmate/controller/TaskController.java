@@ -93,8 +93,6 @@ public class TaskController {
 		
 		Account loginUser = userDetails.getAccount();
 		task.setUser(loginUser);
-		System.out.println(task.getId());
-		System.out.println(task.getUser());
 		taskRepository.save(task);
 		return "redirect:/tasks/tasklist";
 	}
