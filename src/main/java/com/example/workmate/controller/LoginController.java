@@ -17,13 +17,14 @@ public class LoginController {
 	@GetMapping("/login")
 	public String login(@AuthenticationPrincipal AccountUserDetails userDetails) {
 		if(userDetails != null) {
+			System.out.println("ログイン中");
 			return "redirect:/dashboard";
 		}
 		
 		return "login";
 	}
 	
-	//Spring Securityを導入したためこのPostは必要なくなった
+	//Spring Securityを導入したためこのPostMappingは必要なくなった
 	
 	//Postでアクセスしたときにこのメソッドが実行される
 //	@PostMapping("/login")

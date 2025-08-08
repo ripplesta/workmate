@@ -1,7 +1,8 @@
 package com.example.workmate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.example.workmate.domain.Account;
 import com.example.workmate.dto.RegisterForm;
 import com.example.workmate.repository.AccountRepository;
+import com.example.workmate.security.AccountUserDetails;
 
 @Controller
 public class RegisterController {
@@ -18,11 +20,16 @@ public class RegisterController {
 	@Autowired
 	private AccountRepository accountRepository;
 	
+	//セキュリティのためパスワードをハッシュ化する準備
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 	@GetMapping("/register")
-	public String register(Model model) {
+	public String register(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
+		if(userDetails != null) {
+			System.out.println("ログイン中");
+			return "redirect:/dashboard";
+		}
 		model.addAttribute("registerForm", new RegisterForm());
 		return "register";
 	}
@@ -30,7 +37,8 @@ public class RegisterController {
 	@PostMapping("/register")
 	public String registerUser(@ModelAttribute RegisterForm registerForm, Model model) {
 		//入力された情報のログインIDがDBに保存されているログインIDと重複していたらエラーメッセージを表示する
-		if(accountRepository.findByLoginId(registerForm.getLoginId()).isPresent()) {
+		boolean loginIdExists = accountRepository.findByLoginId(registerForm.getLoginId()).isPresent();
+		if(loginIdExists) {
 			model.addAttribute("errorMessage", "このログインIDは使用されています");
 			return "register";
 		}
@@ -38,6 +46,7 @@ public class RegisterController {
 		//入力データをインスタンスに格納
 		Account newUser = new Account();
 		newUser.setLoginId(registerForm.getLoginId());
+		//セキュリティを強化するためにパスワードをハッシュ化して登録
 		newUser.setPassword(passwordEncoder.encode(registerForm.getPassword()));
 		newUser.setMail(registerForm.getMail());
 		newUser.setUserName(registerForm.getUserName());

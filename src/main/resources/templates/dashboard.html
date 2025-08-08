@@ -4,7 +4,7 @@
     <title>メニュー画面</title>
 </head>
 <body>
-    <h1>ようこそ！<span th:text="${session.loginUser.userName}"></span>さん！</h1>
+    <h1>ようこそ！<span th:text="${user.userName}"></span>さん！</h1>
 
     <p>ログイン中のメールアドレス：<span th:text="${user.mail}">email@gmail.com</span></p>
 

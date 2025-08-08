@@ -2,9 +2,8 @@ package com.example.workmate.controller;
 
 import java.util.List;
 
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +16,7 @@ import com.example.workmate.domain.Account;
 import com.example.workmate.domain.Task;
 import com.example.workmate.dto.TaskForm;
 import com.example.workmate.repository.TaskRepository;
+import com.example.workmate.security.AccountUserDetails;
 
 @Controller
 @RequestMapping("/tasks")
@@ -27,9 +27,9 @@ public class TaskController {
 	
 	//ここがタスク一覧でtasklistにアクセスするとここが実行される
 	@GetMapping("/tasklist")
-	public String showTaskList(HttpSession session, Model model) {
+	public String showTaskList(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		
-		Account loginUser = (Account) session.getAttribute("loginUser");
+		Account loginUser = userDetails.getAccount();
 		
 		//ログイン情報がなければホーム画面にリダイレクト
 		if(loginUser == null) {
@@ -55,9 +55,9 @@ public class TaskController {
 	
 	//登録フォームで入力された情報が送られる
 	@PostMapping("/create")
-	public String createTask(@ModelAttribute TaskForm taskForm, HttpSession session, Model model) {
+	public String createTask(@AuthenticationPrincipal AccountUserDetails userDetails, @ModelAttribute TaskForm taskForm, Model model) {
 		
-		Account loginUser = (Account)session.getAttribute("loginUser");
+		Account loginUser = userDetails.getAccount();
 		
 		//フォームから送られてきたデータをDBに保存
 		Task createTask = new Task();
@@ -75,7 +75,7 @@ public class TaskController {
 		return "redirect:/tasks/tasklist";
 	}
 	
-	//タスク各々にidが割り振られていて編集したいタスクのidを0送って編集フォームに遷移する
+	//タスク各々にidが割り振られていて編集したいタスクのidを送って編集フォームに遷移する
 	@GetMapping("/edit/{id}")
 	public String editTaskForm(@PathVariable Long id, Model model){
 		//タスクがあればtaskに格納、なくてもorElseThrow()で例外を投げる
@@ -87,14 +87,12 @@ public class TaskController {
 
 	//編集フォームの更新データをDBに保存する
 	@PostMapping("/edit/update")
-	public String updateTask(@ModelAttribute TaskForm taskForm){
+	public String updateTask(@AuthenticationPrincipal AccountUserDetails userDetails, @ModelAttribute TaskForm taskForm){
 		//送られてきたデータをTaskに格納
 		Task task = Task.fromForm(taskForm);
 		
-		//まだ未完成　一旦Spring Securityの導入をするので
-		//ここはまだ解決していない
-		//現状はuserIdが渡せていないのでDBに新規登録になってしまっている
-		//task = taskRepository.findById(taskForm.getId()).orElseThrow(() -> new RuntimeException("該当タスクなし"));
+		Account loginUser = userDetails.getAccount();
+		task.setUser(loginUser);
 		taskRepository.save(task);
 		return "redirect:/tasks/tasklist";
 	}

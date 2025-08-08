@@ -3,11 +3,9 @@ package com.example.workmate.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,10 +19,11 @@ public class SecurityConfig {
 	@Autowired
 	private final AccountUserDetailsService userDetailsService;
 	
-	 @Bean
-	    public PasswordEncoder passwordEncoder(){
-	        return new BCryptPasswordEncoder();
-	    }
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		// BCryptでハッシュ化
+		return new BCryptPasswordEncoder();
+	}
 	
 	public SecurityConfig(AccountUserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
@@ -39,32 +38,28 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
-                //.usernameParameter("loginId")
-                //.passwordParameter("password")
-                .defaultSuccessUrl("/dashboard")
+                //.loginProcessingUrl("/login")
+                .usernameParameter("loginId")
+                .passwordParameter("password")
+                .defaultSuccessUrl("/dashboard",true)
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/home")
+                .logoutSuccessUrl("/login?logout")
                 .permitAll()
             );
         return http.build();
     }
     
     @Bean
-    public AuthenticationManager authenticationManager(
-    		HttpSecurity http,
-    		PasswordEncoder passwordEncoder,
-    		UserDetailsService userDetailsService) throws Exception {
-    	
-    	return http.getSharedObject(AuthenticationManagerBuilder.class)
-    			.userDetailsService(userDetailsService)
-    			.passwordEncoder(passwordEncoder)
-    			.and()
-    			.build();
+    public DaoAuthenticationProvider authenticationProvider() {
+    	DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    	authProvider.setUserDetailsService(userDetailsService);
+    	authProvider.setPasswordEncoder(passwordEncoder());
+    	return authProvider;
     }
+    
     
 }
