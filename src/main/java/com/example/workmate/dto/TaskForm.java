@@ -41,6 +41,7 @@ public class TaskForm {
 		this.status = task.getStatus();
 		this.priority = task.getPriority();
 		this.category = task.getCategory();
+		this.createdAt = task.getCreatedAt();
 
 	}
 

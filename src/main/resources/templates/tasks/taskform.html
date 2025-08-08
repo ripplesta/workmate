@@ -8,49 +8,52 @@
     <h2 th:if="${taskForm.id != null}">タスク編集画面</h2>
     
     <form th:action="${taskForm.id == null} ? @{/tasks/create} : @{/tasks/edit/update}" 
-          th:object="${taskForm}" method="post">
-        <input type="hidden" id="id" value="${taskForm.id}">
-    <div> 
-        <label for="title">タイトル：</label>
-        <input type="text" th:field="*{title}" id="title" placeholder="タイトルを入力" />
-    </div>
-    <div>
-        <label for="description">内容：</label>
-        <textarea th:field="*{description}" id="description" rows="5" cols="40" placeholder="内容を入力"></textarea>
-    </div>
-    <div>
-        <label for="dueDate">期限：</label>
-        <input type="date" th:field="*{dueDate}" id="dueDate" />
-    </div>
-    <div>
-        <label for="status">進捗状況：</label>
-        <select th:field="*{status}">
-            <option value="未着手">未着手</option>
-            <option value="進行中">進行中</option>
-            <option value="完了">完了</option>
-        </select>
-    </div>
-    <div>
-        <label for="priority">優先度：</label>
-        <select th:field="*{priority}">
-            <option value="高">高</option>
-            <option value="中">中</option>
-            <option value="低">低</option>
-        </select>
-    </div>
-    <div>
-        <label for="category">カテゴリ：</label>
-        <select th:field="*{category}">
-            <option value="仕事">仕事</option>
-            <option value="趣味">趣味</option>
-            <option value="勉強">勉強</option>
-            <option value="生活">生活</option>
-            <option value="その他">その他</option>
-        </select>
-    </div>
-    <div>
-        <button type="submit" th:text="${taskForm.id == null} ? '登録' : '更新'">登録</button>
-    </div>
+        th:object="${taskForm}" method="post">
+            <input type="hidden" th:field="*{id}" id="id"/>
+        <div> 
+            <label for="title">タイトル：</label>
+            <input type="text" th:field="*{title}" id="title" placeholder="タイトルを入力" />
+        </div>
+        <div>
+            <label for="description">内容：</label>
+            <textarea th:field="*{description}" id="description" rows="5" cols="40" placeholder="内容を入力"></textarea>
+        </div>
+        <div>
+            <label for="dueDate">期限：</label>
+            <input type="date" th:field="*{dueDate}" id="dueDate" />
+        </div>
+        <div>
+            <input type="hidden" th:field="*{createdAt}" id="createdAt" />
+        </div>
+        <div>
+            <label for="status">進捗状況：</label>
+            <select th:field="*{status}">
+                <option value="未着手">未着手</option>
+                <option value="進行中">進行中</option>
+                <option value="完了">完了</option>
+            </select>
+        </div>
+        <div>
+            <label for="priority">優先度：</label>
+            <select th:field="*{priority}">
+                <option value="高">高</option>
+                <option value="中">中</option>
+                <option value="低">低</option>
+            </select>
+        </div>
+        <div>
+            <label for="category">カテゴリ：</label>
+            <select th:field="*{category}">
+                <option value="仕事">仕事</option>
+                <option value="趣味">趣味</option>
+                <option value="勉強">勉強</option>
+                <option value="生活">生活</option>
+                <option value="その他">その他</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" th:text="${taskForm.id == null} ? '登録' : '更新'">登録</button>
+        </div>
     </form>
 </body>
 </html>

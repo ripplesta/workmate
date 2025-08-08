@@ -27,7 +27,6 @@ public class RegisterController {
 	@GetMapping("/register")
 	public String register(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		if(userDetails != null) {
-			System.out.println("ログイン中");
 			return "redirect:/dashboard";
 		}
 		model.addAttribute("registerForm", new RegisterForm());

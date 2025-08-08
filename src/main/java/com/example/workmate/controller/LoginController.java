@@ -17,7 +17,6 @@ public class LoginController {
 	@GetMapping("/login")
 	public String login(@AuthenticationPrincipal AccountUserDetails userDetails) {
 		if(userDetails != null) {
-			System.out.println("ログイン中");
 			return "redirect:/dashboard";
 		}
 		

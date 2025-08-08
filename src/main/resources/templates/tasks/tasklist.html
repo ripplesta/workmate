@@ -33,7 +33,7 @@
                 <td> 
                     <a th:href="@{'/tasks/edit/' + ${task.id}}">タスクを編集</a>
                     <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" style="display:inline">
-                        <input type="button" value="削除" onclick="return confirm('本当に削除しますか？');">
+                        <input type="submit" value="削除" onclick="return confirm('本当に削除しますか？');">
                     </form>
                 </td>
             </tr>
