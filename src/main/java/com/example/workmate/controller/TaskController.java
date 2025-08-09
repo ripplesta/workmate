@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.Task;
@@ -104,7 +105,18 @@ public class TaskController {
 		return "redirect:/tasks/tasklist";
 	}
 
-	@GetMapping
+	@GetMapping("/search")
+	public String searchTasks(@RequestParam String searchWord, Model model) {
+		List<Task> searchTasks = taskRepository.searchAllField(searchWord);
+		model.addAttribute("tasks",searchTasks);
+		return "tasks/taskkist";
+	}
+//	@GetMapping("/tasklist")
+//	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
+//		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
+//		model.addAttribute("tasks", sortTasks);
+//		return "tasks/tasklist";
+//	}
 }
 
 	

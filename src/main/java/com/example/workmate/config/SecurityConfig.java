@@ -1,6 +1,5 @@
 package com.example.workmate.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,7 +15,6 @@ import com.example.workmate.security.AccountUserDetailsService;
 @EnableWebSecurity
 public class SecurityConfig {
     
-	@Autowired
 	private final AccountUserDetailsService userDetailsService;
 	
 	@Bean
@@ -38,7 +36,7 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                //.loginProcessingUrl("/login")
+                .loginProcessingUrl("/login")
                 .usernameParameter("loginId")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/dashboard",true)
