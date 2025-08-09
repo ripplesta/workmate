@@ -48,5 +48,7 @@
 - エラー：`MissingServletRequestParameterException`
 - 原因：必要なリクエストパラメータがリクエストに含まれていない
 - 対処：うまく渡せていなかったので訂正した
-
+- エラー：`QueryCreationException`
+- 原因：リポジトリに与えたい操作に対してのクエリの構文が間違っていた
+- 対処：@Queryに記述したものを修正
 
