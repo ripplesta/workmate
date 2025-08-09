@@ -41,8 +41,6 @@ public class TaskController {
 		//Long userId = loginUser.getUserId();
 		
 		List<Task> taskList = taskRepository.findByUser(loginUser);
-		
-		
 		model.addAttribute("tasks", taskList);
 		
 		return "tasks/tasklist";
@@ -110,13 +108,23 @@ public class TaskController {
 	public String searchTasks(@RequestParam String searchWord, Model model) {
 		List<Task> searchTasks = taskRepository.searchAllField(searchWord);
 		model.addAttribute("tasks",searchTasks);
-		return "tasks/taskkist";
+		return "tasks/tasklist";
 	}
+	
 	@GetMapping("/tasklist/sort")
 	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
 		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
 		model.addAttribute("tasks", sortTasks);
 		return "tasks/tasklist";
+	}
+	
+	@GetMapping("/refresh")
+	public String refreshTasks(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
+		Account loginUser = userDetails.getAccount();
+		List<Task> taskList = taskRepository.findByUser(loginUser);
+		model.addAttribute("tasks", taskList);
+		
+		return "redirect:/tasks/tasklist";
 	}
 }
 

@@ -7,8 +7,10 @@
     <h1>タスク一覧</h1>
     <form th:action="@{/tasks/search}" method="get">
         <input type="text" name="searchWord" placeholder="キーワードを入力">
-        <button type="submit" value="検索"></button>
+        <button type="submit" >検索</button>
+        <a th:href="@{/tasks/refresh}">元に戻す</a>
     </form>
+    
     <label>ソート:</label>
     <a th:href="@{/tasks/tasklist/sort(sortBy='dueDate')}">期限日順</a> |
     <a th:href="@{/tasks/tasklist/sort(sortBy='createdAt')}">作成日順</a>
