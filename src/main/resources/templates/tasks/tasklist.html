@@ -5,13 +5,13 @@
 </head>
 <body>
     <h1>タスク一覧</h1>
-    <form th:action="@{/task/search}" method="get">
+    <form th:action="@{/tasks/search}" method="get">
         <input type="text" name="search" placeholder="キーワードを入力">
         <button type="submit" value="検索">
     </form>
     <label>ソート:</label>
-    <a th:href="@{/task/tasklist(sortBy='dueDate')}">期限日順</a> |
-    <a th:href="@{/task/tasklist(sortBy='createdAt')}">作成日順</a>
+    <a th:href="@{/tasks/tasklist(sortBy='dueDate')}">期限日順</a> |
+    <a th:href="@{/tasks/tasklist(sortBy='createdAt')}">作成日順</a>
     <table border="1">
         <thead>
             <tr>
