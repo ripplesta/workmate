@@ -103,6 +103,8 @@ public class TaskController {
 		taskRepository.delete(task);
 		return "redirect:/tasks/tasklist";
 	}
+
+	@GetMapping
 }
 
 	
