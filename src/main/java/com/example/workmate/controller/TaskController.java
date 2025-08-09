@@ -3,6 +3,7 @@ package com.example.workmate.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -111,12 +112,12 @@ public class TaskController {
 		model.addAttribute("tasks",searchTasks);
 		return "tasks/taskkist";
 	}
-//	@GetMapping("/sorttasklist")
-//	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
-//		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
-//		model.addAttribute("tasks", sortTasks);
-//		return "tasks/tasklist";
-//	}
+	@GetMapping("/tasklist/sort")
+	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
+		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
+		model.addAttribute("tasks", sortTasks);
+		return "tasks/tasklist";
+	}
 }
 
 	
