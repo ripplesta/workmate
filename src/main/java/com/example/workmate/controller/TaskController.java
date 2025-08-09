@@ -111,7 +111,7 @@ public class TaskController {
 		model.addAttribute("tasks",searchTasks);
 		return "tasks/taskkist";
 	}
-//	@GetMapping("/tasklist")
+//	@GetMapping("/sorttasklist")
 //	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
 //		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
 //		model.addAttribute("tasks", sortTasks);
