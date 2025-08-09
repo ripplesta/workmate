@@ -4,6 +4,12 @@
     <title>タスク管理</title>
 </head>
 <body>
+    <form th:action="@{/task/search}" method="get">
+        <input type="text" name="search" placeholder="キーワードを入力">
+        <button type="submit" value="検索">
+    </form>
+    <form th:action="@{/task/sort}" method="post">
+        <
     <h1>タスク一覧</h1>
     <table border="1">
         <thead>
@@ -31,7 +37,9 @@
                 <td th:text="${#temporals.format(task.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
         
                 <td> 
-                    <a th:href="@{'/tasks/edit/' + ${task.id}}">タスクを編集</a>
+                    <form th:action="@{'/tasks/edit/' + ${task.id}}" method="get" style="display:inline">
+                        <input type="submit" value="編集" >
+                    </form>
                     <form th:action="@{'/tasks/delete/' + ${task.id}}" method="post" style="display:inline">
                         <input type="submit" value="削除" onclick="return confirm('本当に削除しますか？');">
                     </form>
