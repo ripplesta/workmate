@@ -93,6 +93,14 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 - `Repository`はJPAの内部機能によって決められた命名規則でメソッド名を書くと自動生成してくれる
   例 `findByLoginId(String loginId)`で渡されたログインIDを検索  
   `findByUser(Account user)`とすると`@ManyToOne`で外部キーを参照しているので自動でuser_idに変換して検索  
+
+## 3週目(8/4~8/10)
+### タスク機能実装記録
+- 編集機能の続きを実装
+- Spring Securityを利用したセキュリティ機能を導入
+- タスクの検索やソート機能
+
+#### 学びメモ
 - フォームから渡された情報をDBに保存するとき一緒にログインしているUserIdを保存したいのでセッション情報を取得して`task.setUser(account)`などで一緒に保存
 - `th:href="@{'/tasks/edit/' + ${task.id}`という形にするとtasks/edit/1などタスクのIDの情報を含めて編集フォームに遷移できる  
   → Get /edit/{id} でマッピングして`(@PathVariable Long id)`でURLに含まれる動的パラメータを受け取りリポジトリでidをDBから探して編集フォームに渡す  
