@@ -27,18 +27,18 @@ public class TaskController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
-	//ここがタスク一覧でtasklistにアクセスするとここが実行される
+	// ここがタスク一覧でtasklistにアクセスするとここが実行される
 	@GetMapping("/tasklist")
 	public String showTaskList(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		
 		Account loginUser = userDetails.getAccount();
 		
-		//ログイン情報がなければホーム画面にリダイレクト
+		// ログイン情報がなければホーム画面にリダイレクト
 		if(loginUser == null) {
 			return "redirect:/home";
 		}
 		
-		//Long userId = loginUser.getUserId();
+		// Long userId = loginUser.getUserId();
 		
 		List<Task> taskList = taskRepository.findByUser(loginUser);
 		model.addAttribute("tasks", taskList);
@@ -46,22 +46,22 @@ public class TaskController {
 		return "tasks/tasklist";
 	}
 	
-	//登録を押すとここが実行されて登録フォームに遷移する
+	// 登録を押すとここが実行されて登録フォームに遷移する
 	@GetMapping("/new")
 	public String newTaskForm(Model model) {
 		model.addAttribute("taskForm", new TaskForm());
 		return "tasks/taskform";
 	}
 	
-	//登録フォームで入力された情報が送られる
+	// 登録フォームで入力された情報が送られる
 	@PostMapping("/create")
 	public String createTask(@AuthenticationPrincipal AccountUserDetails userDetails, @ModelAttribute TaskForm taskForm, Model model) {
 		
 		Account loginUser = userDetails.getAccount();
 		
-		//フォームから送られてきたデータをDBに保存
+		// フォームから送られてきたデータをDBに保存
 		Task createTask = new Task();
-		//userIdは現在のセッションから取得し保存
+		// userIdは現在のセッションから取得し保存
 		createTask.setUser(loginUser);
 		createTask.setTitle(taskForm.getTitle());
 		createTask.setDescription(taskForm.getDescription());
@@ -75,20 +75,20 @@ public class TaskController {
 		return "redirect:/tasks/tasklist";
 	}
 	
-	//タスク各々にidが割り振られていて編集したいタスクのidを送って編集フォームに遷移する
+	// タスク各々にidが割り振られていて編集したいタスクのidを送って編集フォームに遷移する
 	@GetMapping("/edit/{id}")
 	public String editTaskForm(@PathVariable Long id, Model model){
-		//タスクがあればtaskに格納、なくてもorElseThrow()で例外を投げる
+		// タスクがあればtaskに格納、なくてもorElseThrow()で例外を投げる
 		Task task = taskRepository.findById(id).orElseThrow();
 		TaskForm taskForm = new TaskForm(task);
 		model.addAttribute("taskForm", taskForm);
 		return "tasks/taskform";
 	}
 
-	//編集フォームの更新データをDBに保存する
+	// 編集フォームの更新データをDBに保存する
 	@PostMapping("/edit/update")
 	public String updateTask(@AuthenticationPrincipal AccountUserDetails userDetails, @ModelAttribute TaskForm taskForm){
-		//送られてきたデータをTaskに格納
+		// 送られてきたデータをtaskに格納
 		Task task = Task.fromForm(taskForm);
 		
 		Account loginUser = userDetails.getAccount();
@@ -97,6 +97,7 @@ public class TaskController {
 		return "redirect:/tasks/tasklist";
 	}
 
+	// 削除したいタスクのidをURLパラメータで送って削除
 	@PostMapping("/delete/{id}")
 	public String deleteTask(@PathVariable Long id) {
 		Task task = taskRepository.findById(id).orElseThrow();
@@ -104,13 +105,17 @@ public class TaskController {
 		return "redirect:/tasks/tasklist";
 	}
 
+	// タスクを検索したいキーワードで絞り込み
 	@GetMapping("/search")
 	public String searchTasks(@RequestParam String searchWord, Model model) {
+		// 送られてきたキーワードをリポジトリで設定したクエリで処理してsearchTasksに格納してHTML側に送る
 		List<Task> searchTasks = taskRepository.searchAllField(searchWord);
 		model.addAttribute("tasks",searchTasks);
 		return "tasks/tasklist";
 	}
 	
+	// タスクを決められた条件でソート
+	// 複雑なソートは難しいのでとりあえず簡単なものを作成
 	@GetMapping("/tasklist/sort")
 	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
 		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
@@ -118,12 +123,12 @@ public class TaskController {
 		return "tasks/tasklist";
 	}
 	
+	// 検索したりソートされたものを初期化したいときに使う
 	@GetMapping("/refresh")
 	public String refreshTasks(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		Account loginUser = userDetails.getAccount();
 		List<Task> taskList = taskRepository.findByUser(loginUser);
 		model.addAttribute("tasks", taskList);
-		
 		return "redirect:/tasks/tasklist";
 	}
 }

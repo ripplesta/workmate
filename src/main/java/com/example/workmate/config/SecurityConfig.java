@@ -11,18 +11,18 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.example.workmate.security.AccountUserDetailsService;
 
-@Configuration
-@EnableWebSecurity
+@Configuration  //Springの設定クラスであることを示す
+@EnableWebSecurity //Spring SecurityのWebセキュリティ機能を有効化
 public class SecurityConfig {
     
 	private final AccountUserDetailsService userDetailsService;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		// BCryptでハッシュ化
+		// パスワードをBCryptでハッシュ化して保存&認証時にも使う
 		return new BCryptPasswordEncoder();
 	}
-	
+	// コンストラクタでUserDetailsServiceを受け取る
 	public SecurityConfig(AccountUserDetailsService userDetailsService) {
 		this.userDetailsService = userDetailsService;
 	}
@@ -30,32 +30,36 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+        	// URLごとにアクセス制御設定
             .authorizeHttpRequests(authz -> authz
                 .requestMatchers("/home", "/login", "/register", "/images/**", "/css/**", "/js/**").permitAll()
-                .anyRequest().authenticated()
+                .anyRequest().authenticated() // それ以外はログイン必須
             )
+            // ログインフォームの設定
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .usernameParameter("loginId")
-                .passwordParameter("password")
-                .defaultSuccessUrl("/dashboard",true)
-                .failureUrl("/login?error=true")
+                .loginPage("/login") // ログインページのURL
+                .loginProcessingUrl("/login") // 認証処理のURL(POST先)
+                .usernameParameter("loginId") // フォームのname属性が"loginId"の値をユーザー名として使用
+                .passwordParameter("password") // パスワードのフォームname属性
+                .defaultSuccessUrl("/dashboard",true) // ログイン成功時の遷移先(trueで常に固定)
+                .failureUrl("/login?error=true") // ログイン失敗時の遷移先
                 .permitAll()
             )
+            // ログアウト設定
             .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
+                .logoutUrl("/logout") // ログアウト処理のURL
+                .logoutSuccessUrl("/login?logout") // ログアウト成功時の遷移先
                 .permitAll()
             );
-        return http.build();
+        return http.build(); // 設定を反映
     }
     
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
+    	// Spring Securityにユーザー情報取得方法とパスワードのハッシュ化方式を登録
     	DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    	authProvider.setUserDetailsService(userDetailsService);
-    	authProvider.setPasswordEncoder(passwordEncoder());
+    	authProvider.setUserDetailsService(userDetailsService); // ユーザー情報取得用サービスをセット
+    	authProvider.setPasswordEncoder(passwordEncoder()); // パスワード比較的のエンコード方法をセット
     	return authProvider;
     }
     

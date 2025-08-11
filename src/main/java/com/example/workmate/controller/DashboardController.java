@@ -14,13 +14,13 @@ public class DashboardController {
 	@GetMapping("/dashboard")
 	public String dashboard(@AuthenticationPrincipal AccountUserDetails userDetails, Model model){
 
-		//ログインしたユーザー情報を取得
+		// ログインしたユーザー情報を取得
 		Account loginUser = userDetails.getAccount();
-		//ログインしていなかったらホーム画面にリダイレクト
+		// ログインしていなかったらホーム画面にリダイレクト
 		if(loginUser == null) {
 			return "redirect:/home";
 		}
-		//ログインしたユーザー情報をhtml側に送る
+		// ログインしたユーザー情報をhtml側に送る
 		model.addAttribute("user", loginUser);
 		return "dashboard";
 	}
