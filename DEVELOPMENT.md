@@ -32,6 +32,11 @@
   → HTML側`<form th:action="@{/login}" th:object="${loginForm}"`
    `<input type="text" th:field="*{loginId}" />`  
   これで`*{loginId}` ← `taskForm.getLoginId()`にバインドされる)  
+  → 実際には`<input name="text" value="${loginForm.loginId}" />`と同じ
+ - 補足：name属性・value属性・id属性(自動で生成される)を自動でセットしてくれる便利なもので  
+   `<input type="text" th:field="*{loginId}" />`
+   これは実際には
+   `<input type="text" name="loginId" id="loginId" value="(loginForm.lodinIdの値)" />`となる  
 - `@ModelAttribute`を付与するとフォームなどから入力されたデータを指定したオブジェクトに保存してコントローラーで処理できる
 - `HttpSession` でセッション管理ができる(例：`session.setAttribute("loginUser", account)`でセッションに保存
 - `session.getAttribute("loginUser")`でセッションから値を取得
@@ -72,7 +77,7 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 - ユーザーごとにタスクを表示
 - 登録や編集・削除ボタンで管理
 - 登録や編集などを押すとフォーム画面に遷移して入力する
-- 
+- 編集機能に手間取ってこの週に実装できなかった
 
 #### 学びメモ
 - とりあえず最初はログインしているユーザーごとにタスクを表示させるようにした
@@ -80,6 +85,15 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 - セッションに保存されている情報を取得して`findByUser(loginUser)`でユーザーIDが一致しているタスクの情報をDBから持ってきてhtml側に渡し表示する
 - 1つのコントローラーに登録、編集、削除の処理を実装した
 - 登録時にフォームから送られてきたデータをDBに保存する時userIdだけは現在のセッション情報から持ってくる
-- フォームは同じものをform th:action=をつかって登録か編集かを判断して表示させる  
+- フォームは同じものをform th:action=をつかって登録か編集かを判断して表示させることもできる  
   → form th:action="${taskForm.id == null ? @{(/tasks/create)} : @{(/tasks/edit/update)}"でidに何も入ってなければ登録、入っていれば編集になる  
  他の記述もth:ifで分岐させてどっちかを表示されるなどが可能
+- `RequestMapping("/tasks")`で全体の共通パスになる
+  `@GetMapping("/new")`などにすると/tasks/newとなる
+- `Repository`はJPAの内部機能によって決められた命名規則でメソッド名を書くと自動生成してくれる
+  例 `findByLoginId(String loginId)`で渡されたログインIDを検索  
+  `findByUser(Account user)`とすると`@ManyToOne`で外部キーを参照しているので自動でuser_idに変換して検索  
+- フォームから渡された情報をDBに保存するとき一緒にログインしているUserIdを保存したいのでセッション情報を取得して`task.setUser(account)`などで一緒に保存
+- `th:href="@{'/tasks/edit/' + ${task.id}`という形にするとtasks/edit/1などタスクのIDの情報を含めて編集フォームに遷移できる
+  → Get /edit/{id} でマッピングして`(@PathVariable Long id)`でURLに含まれる動的パラメータを受け取りリポジトリでidをDBから探して編集フォームに渡す   
+  → POST　/tasks/updateなどで編集したい情報をタスクIDと共にデータを送ってDBに更新処理をする(タスクIDを送らないと新規作成になってしまう)  
