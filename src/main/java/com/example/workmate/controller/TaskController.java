@@ -123,19 +123,20 @@ public class TaskController {
 							  @RequestParam(required = false) String priority,
 							  @RequestParam(defaultValue = "dueDate") String sortBy,
 							  @RequestParam(defaultValue = "asc") String order,
-							  //@AuthenticationPrincipal AccountUserDetails userDetails,
+							  @AuthenticationPrincipal AccountUserDetails userDetails,
 							  Model model) {
 		
+		Account loginUser = userDetails.getAccount();
+		
 		// Specification組み合わせ
-		Specification<Task> spec = Specification.where(TaskSpecifications.titleContains(title))
+		Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
+												.and(TaskSpecifications.titleContains(title))
 												.and(TaskSpecifications.statusEquals(status))
 				                                .and(TaskSpecifications.categoryEquals(category))
 				                                .and(TaskSpecifications.priorityEquals(priority));
 		
 		// ソートの設定
 		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-		
-		//ccount loginUser = userDetails.getAccount();
 		
 		// 実行して格納
 		List<Task> tasks = taskRepository.findAll(spec, sort);

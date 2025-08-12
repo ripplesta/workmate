@@ -8,5 +8,6 @@ import com.example.workmate.domain.Account;
 
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	Optional<Account> findByLoginId(String loginId);
+	Long findByUserId(Long userId);
 
 }
