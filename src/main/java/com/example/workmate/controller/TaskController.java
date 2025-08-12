@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import com.example.workmate.domain.Task;
 import com.example.workmate.dto.TaskForm;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
+import com.example.workmate.spec.TaskSpecifications;
 
 @Controller
 @RequestMapping("/tasks")
@@ -106,24 +108,60 @@ public class TaskController {
 	}
 
 	// タスクを検索したいキーワードで絞り込み
+//	@GetMapping("/search")
+//	public String searchTasks(@RequestParam String searchWord, Model model) {
+//		// 送られてきたキーワードをリポジトリで設定したクエリで処理してsearchTasksに格納してHTML側に送る
+//		List<Task> searchTasks = taskRepository.searchAllField(searchWord);
+//		model.addAttribute("tasks",searchTasks);
+//		return "tasks/tasklist";
+//	}
+	
 	@GetMapping("/search")
-	public String searchTasks(@RequestParam String searchWord, Model model) {
-		// 送られてきたキーワードをリポジトリで設定したクエリで処理してsearchTasksに格納してHTML側に送る
-		List<Task> searchTasks = taskRepository.searchAllField(searchWord);
-		model.addAttribute("tasks",searchTasks);
+	public String searchTasks(@RequestParam(required = false) String title,
+							  @RequestParam(required = false) String status,
+							  @RequestParam(required = false) String category,
+							  @RequestParam(required = false) String priority,
+							  @RequestParam(defaultValue = "dueDate") String sortBy,
+							  @RequestParam(defaultValue = "asc") String order,
+							  //@AuthenticationPrincipal AccountUserDetails userDetails,
+							  Model model) {
+		
+		// Specification組み合わせ
+		Specification<Task> spec = Specification.where(TaskSpecifications.titleContains(title))
+												.and(TaskSpecifications.statusEquals(status))
+				                                .and(TaskSpecifications.categoryEquals(category))
+				                                .and(TaskSpecifications.priorityEquals(priority));
+		
+		// ソートの設定
+		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+		
+		//ccount loginUser = userDetails.getAccount();
+		
+		// 実行して格納
+		List<Task> tasks = taskRepository.findAll(spec, sort);
+		
+		model.addAttribute("tasks", tasks);
+		model.addAttribute("title", title);
+		model.addAttribute("status", status);
+		model.addAttribute("category", category);
+		model.addAttribute("priority", priority);
+		model.addAttribute("sort", sortBy);
+		model.addAttribute("order", order);
+		
 		return "tasks/tasklist";
+				                                
 	}
 	
 	// タスクを決められた条件でソート
 	// 複雑なソートは難しいのでとりあえず簡単なものを作成
-	@GetMapping("/tasklist/sort")
-	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
-		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
-		model.addAttribute("tasks", sortTasks);
-		return "tasks/tasklist";
-	}
+//	@GetMapping("/tasklist/sort")
+//	public String getTasks(@RequestParam(defaultValue = "id") String sortBy, Model model) {
+//		List<Task> sortTasks = taskRepository.findAll(Sort.by(sortBy).ascending());
+//		model.addAttribute("tasks", sortTasks);
+//		return "tasks/tasklist";
+//	}
 	
-	// 検索したりソートされたものを初期化したいときに使う
+	// 検索したりソートされたものを初期化したいとき
 	@GetMapping("/refresh")
 	public String refreshTasks(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		Account loginUser = userDetails.getAccount();

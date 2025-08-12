@@ -6,14 +6,48 @@
 <body>
     <h1>タスク一覧</h1>
     <form th:action="@{/tasks/search}" method="get">
-        <input type="text" name="searchWord" placeholder="キーワードを入力">
+        タイトル：<input type="text" name="title" th:value="${title}" placeholder="キーワードを入力">
+        進捗状況：
+        <select name="status">
+            <option value="">--選択--</option>
+            <option value="未着手" th:selected="${status=='未着手'}">未着手</option>
+            <option value="進行中" th:selected="${status=='進行中'}">進行中</option>
+            <option value="完了" th:selected="${status=='完了'}">完了</option>
+        </select>
+        優先度：
+        <select name="prioriy">
+            <option value="">--選択--</option>
+            <option value="高" th:selected="${priority=='高'}">高</option>
+            <option value="中" th:selected="${proority=='中'}">中</option>
+            <option value="低" th:selected="${priority=='低'}">低</option>
+        </select>
+        カテゴリ：
+        <select name="category">
+            <option value="">--選択--</option>
+            <option value="仕事" th:selected="${category=='仕事'}">仕事</option>
+            <option value="趣味" th:selected="${category=='趣味'}">趣味</option>
+            <option value="勉強" th:selected="${category=='勉強'}">勉強</option>
+            <option value="生活" th:selected="${category=='生活'}">生活</option>
+            <option value="その他" th:selected="${category=='その他'}">その他</option>
+        </select>
+        ソート：
+        <select name="sortBy">
+            <option value="dueDate" th:selected="${sortBy=='dueDate'}">期限日</option>
+            <option value="createdAt" th:selected="${sortBy=='createdAt'}">作成日</option>
+        </select>
+        <select name="order">
+            <option value="asc" th:selected="${order=='asc'}">昇順</option>
+            <option value="desc" th:selected="${order=='desc'}">降順</option>
+        </select>
         <button type="submit" >検索</button>
         <a th:href="@{/tasks/refresh}">元に戻す</a>
     </form>
     
+    <!--
     <label>ソート:</label>
     <a th:href="@{/tasks/tasklist/sort(sortBy='dueDate')}">期限日順</a> |
     <a th:href="@{/tasks/tasklist/sort(sortBy='createdAt')}">作成日順</a>
+    -->
     <table border="1">
         <thead>
             <tr>
