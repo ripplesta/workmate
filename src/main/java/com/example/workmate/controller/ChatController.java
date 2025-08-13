@@ -31,12 +31,12 @@ public class ChatController {
 		Account loginUser = userDetails.getAccount();
 		List<ChatMessage> message = chatMessageRepository.findByUserOrderByCreatedAtAsc(loginUser);
 		model.addAttribute("message", message);
-		return "chat";
+		return "chatbot/chat";
 	}
 
 	@PostMapping
 	public String sendMessage(@AuthenticationPrincipal AccountUserDetails userDetails, @RequestParam String message) {
 		Account loginUser = userDetails.getAccount();
-		chatBotService.hundleUserMessage(
-
+		chatBotService.hundleUserMessage(loginUser.getUser(), message);
+		return "redirect:/chatbot/chat";
 }
