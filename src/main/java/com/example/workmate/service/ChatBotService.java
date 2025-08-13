@@ -26,7 +26,7 @@ public class ChatBotService {
 		this.chatMessageRepository = chatRepository;
 	}
 	
-	public void handleUserMassage(Long userId, String messageText) {
+	public void handleUserMassage(Account user, String messageText) {
 		ChatMessage userMsg = new ChatMessage();
 		userMsg.serUser(user);
 		userMsg.setSenderType(ChatMessage.SenderType.USER);
