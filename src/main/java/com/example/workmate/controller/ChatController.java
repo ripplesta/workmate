@@ -34,4 +34,9 @@ public class ChatController {
 		return "chat";
 	}
 
+	@PostMapping
+	public String sendMessage(@AuthenticationPrincipal AccountUserDetails userDetails, @RequestParam String message) {
+		Account loginUser = userDetails.getAccount();
+		chatBotService.hundleUserMessage(
+
 }
