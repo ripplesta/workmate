@@ -43,7 +43,7 @@
   → `Account loginUser = (Account)session.getAttribute("loginUser")`など型変換が必要
 - HTML側で使うときは`th:text="${session.loginUser.userName}"`と`session.`を使って属性にアクセス
 - `session.invalidate()`でセッション破棄
-- `return "redirect:/html`ファイル名"でそのページにリダイレクト
+
 
 ##### リポジトリの`extends JpaRepository<Account, Long>`の説明
 - Spring Data JPA を使ってデータベースアクセスを行う 
@@ -93,6 +93,10 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
 - `Repository`はJPAの内部機能によって決められた命名規則でメソッド名を書くと自動生成してくれる
   例 `findByLoginId(String loginId)`で渡されたログインIDを検索  
   `findByUser(Account user)`とすると`@ManyToOne`で外部キーを参照しているので自動でuser_idに変換して検索  
+- `return "redirect:/でそのページにリダイレクト  
+  redirectはhtmlではなくブラウザに指示
+  例えばredirect:/tasks/newなら/tasks/newというURLにGETアクセスする  
+  SpringはそのURLに対応する@GetMapping("/tasks/new")を探す
 
 ## 3週目(8/4~8/10)
 ### タスク機能実装記録
