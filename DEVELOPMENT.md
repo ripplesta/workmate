@@ -94,9 +94,9 @@ Spting Data JPAのメソッド名でクエリ生成という仕組みを使っ�
   例 `findByLoginId(String loginId)`で渡されたログインIDを検索  
   `findByUser(Account user)`とすると`@ManyToOne`で外部キーを参照しているので自動でuser_idに変換して検索  
 - `return "redirect:/でそのページにリダイレクト  
-  redirectはhtmlではなくブラウザに指示
+  redirectはhtmlではなくブラウザに指示. 
   例えばredirect:/tasks/newなら/tasks/newというURLにGETアクセスする  
-  SpringはそのURLに対応する@GetMapping("/tasks/new")を探す
+  SpringはそのURLに対応する@GetMapping("/tasks/new")を探す  
 
 ## 3週目(8/4~8/10)
 ### タスク機能実装記録
