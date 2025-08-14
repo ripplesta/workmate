@@ -2,9 +2,13 @@ package com.example.workmate.service;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
+import com.example.workmate.domain.Account;
 import com.example.workmate.domain.ChatMessage;
 import com.example.workmate.repository.ChatMessageRepository;
 
+@Service
 public class ChatBotService {
 	
 	private final ChatMessageRepository chatMessageRepository;
@@ -26,29 +30,34 @@ public class ChatBotService {
 		this.chatMessageRepository = chatRepository;
 	}
 	
-	public void handleUserMassage(Account user, String messageText) {
+	public void handleUserMessage(Account user, String messageText) {
+		//ユーザーメッセージ保存
 		ChatMessage userMsg = new ChatMessage();
-		userMsg.serUser(user);
+		userMsg.setUser(user);
 		userMsg.setSenderType(ChatMessage.SenderType.USER);
 		userMsg.setMessageText(messageText);
 		chatMessageRepository.save(userMsg);
 		
+		//Botの応答の生成
 		String botReply = generateReply(messageText);
 		
+		//Botメッセージ保存
 		ChatMessage botMsg = new ChatMessage();
-		botMsg.setUser(null);
+		botMsg.setUser(user);
 		botMsg.setSenderType(ChatMessage.SenderType.BOT);
 		botMsg.setMessageText(botReply);
 		chatMessageRepository.save(botMsg);
 	}
 	
 	private String generateReply(String userInput) {
+		//雑談パターン判定
 		for(Map.Entry<String, String>  entry : chitChatResponses.entrySet()) {
 			if(userInput.contains(entry.getKey())) {
 				return entry.getValue();
 			}
 		}
 		
+		//デフォルト応答(今は簡易)
 		return "なるほど！その件についてもう少し教えてください.";
 	}
 

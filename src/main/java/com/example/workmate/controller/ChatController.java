@@ -6,7 +6,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.ChatMessage;
@@ -30,13 +32,14 @@ public class ChatController {
 	public String chatPage(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		Account loginUser = userDetails.getAccount();
 		List<ChatMessage> message = chatMessageRepository.findByUserOrderByCreatedAtAsc(loginUser);
-		model.addAttribute("message", message);
+		model.addAttribute("messages", message);
 		return "chatbot/chat";
 	}
 
 	@PostMapping
 	public String sendMessage(@AuthenticationPrincipal AccountUserDetails userDetails, @RequestParam String message) {
 		Account loginUser = userDetails.getAccount();
-		chatBotService.hundleUserMessage(loginUser.getUser(), message);
-		return "redirect:/chatbot/chat";
+		chatBotService.handleUserMessage(loginUser, message);
+		return "redirect:/chat";
+	}
 }
