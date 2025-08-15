@@ -32,7 +32,7 @@ public class ChatController {
 	public String chatPage(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		Account loginUser = userDetails.getAccount();
 		List<ChatMessage> message = chatMessageRepository.findByUserOrderByCreatedAtAsc(loginUser);
-		model.addAttribute("messages", message);
+		model.addAttribute("message", message);
 		return "chatbot/chat";
 	}
 

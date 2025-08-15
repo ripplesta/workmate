@@ -4,23 +4,20 @@
     <meta charset="UTF-8">
     <title>WorkMate チャット</title>
     <!-- Spring bootはこっち -->
-    <link rel="stylesheet" th:href="@{/css/chat.css}">
 
-    <!-- Live previewでみたいときはこっちを使う　
-    <link rel="stylesheet" href="../../static/css/chat.css">
--->
+    <link rel="stylesheet" href="./css/test.css">
+
 </head>
 <body>
     <h2 style="text-align: center;">チャットbot</h2>
     <div class="chat-container">
         <div class="messages" id="messages">    
-            <div class="message" th:each="msg : ${message}"  th:classappend="${msg.senderType.name().toLowerCase()}">
-                <span th:text="${msg.messageText}"></span>
-            </div>
+            <div class="message user" >おはよう</div>
+            <div class="message bot" >おはようございます</div>    
         </div>
     
 
-        <form class="form" method="post" action="/chat">
+        <form class="form-row" method="post" action="/chat">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="text" name="message" placeholder="メッセージを入力" required>
             <button type="submit">送信</button>
