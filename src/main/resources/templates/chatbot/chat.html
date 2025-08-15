@@ -14,7 +14,7 @@
     <h2 style="text-align: center;">チャットbot</h2>
     <div class="chat-container">
         <div class="messages">    
-            <div th:each="msg : ${messages}" class="message" th:classappend="${msg.senderType.name().toLowerCase()}">
+            <div th:each="msg : ${messages}" th:classappend="${msg.senderType.name().toLowerCase()}">
                 <span th:text="${msg.messageText}"></span>
             </div>
         </div>
