@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <title>WorkMate チャット</title>
-    <h2 style="text-align: center;">チャットbot</h2>
-    <style>
-        .chat-box { width: 400px; margin: auto; border: 1px solid #ccc; padding: 10px; }
-        .message { margin: 5px 0; }
-        .user { text-align: right; color: green; }
-        .bot { text-align: left; color: blue; }
-    </style>
+    <!-- Spring bootはこっち -->
+    <link rel="stylesheet" th:href="@{/css/chat.css}">
+    
+    <!-- Live previewでみたいときはこっちを使う　
+    <link rel="stylesheet" href="../../static/css/chat.css">
+-->
 </head>
 <body>
-    <div class="chat-box">    
-        <div th:each="msg : ${messages}" class="message" th:classappend="${msg.senderType.name().toLowerCase()}">
-            <span th:text="${msg.messageText}"></span>
+    <h2 style="text-align: center;">チャットbot</h2>
+    <div class="chat-container">
+        <div class="messages">    
+            <div th:each="msg : ${messages}" class="message" th:classappend="${msg.senderType.name().toLowerCase()}">
+                <span th:text="${msg.messageText}"></span>
+            </div>
         </div>
     
 
