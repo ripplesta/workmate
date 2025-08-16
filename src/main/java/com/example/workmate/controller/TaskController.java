@@ -106,15 +106,6 @@ public class TaskController {
 		taskRepository.delete(task);
 		return "redirect:/tasks/tasklist";
 	}
-
-	// タスクを検索したいキーワードで絞り込み
-//	@GetMapping("/search")
-//	public String searchTasks(@RequestParam String searchWord, Model model) {
-//		// 送られてきたキーワードをリポジトリで設定したクエリで処理してsearchTasksに格納してHTML側に送る
-//		List<Task> searchTasks = taskRepository.searchAllField(searchWord);
-//		model.addAttribute("tasks",searchTasks);
-//		return "tasks/tasklist";
-//	}
 	
 	@GetMapping("/search")
 	public String searchTasks(@RequestParam(required = false) String title,

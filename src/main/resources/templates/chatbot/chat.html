@@ -11,8 +11,9 @@
 -->
 </head>
 <body>
+    
     <h2 style="text-align: center;">チャットbot</h2>
-    <div class="chat-container">
+    <div class="chat-container" id="chatContainer">
         <div class="messages" id="messages">    
             <div class="message" th:each="msg : ${message}"  th:classappend="${msg.senderType.name().toLowerCase()}">
                 <span th:text="${msg.messageText}"></span>
@@ -22,9 +23,34 @@
 
         <form class="form" method="post" action="/chat">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-            <input type="text" name="message" placeholder="メッセージを入力" required>
-            <button type="submit">送信</button>
+            <input type="text" id="messageIntput" name="message" placeholder="メッセージを入力" required>
+            <button type="submit" id="sendButton">送信</button>
         </form>
     </div>
+
+    <script>
+        function scrollToBottom() {
+            const container = document.getElementById("messages");
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // ページ読み込み時に一番下へスクロール
+        window.onload = scrollToBottom;
+
+        
+        // // 送信ボタンを押したらメッセージ＋スクロール
+        // document.getElementById("sendButton").addEventListener("click", function() {
+        //     const input = document.getElementById("messageInput");
+        //     const newMessage = document.createElement("div");
+        //     newMessage.classList.add("message", "user");
+        //     newMessage.textContent = input.value;
+
+        //     document.getElementById("messages").appendChild(newMessage);
+        //     input.value = "";
+
+        //     // 最新までスクロール
+        //     scrollToBottom();
+        // })
+    </script>
 </body>
 </html>
