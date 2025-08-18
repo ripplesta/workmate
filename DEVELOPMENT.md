@@ -109,4 +109,14 @@
   - フォームから渡された情報をDBに保存するとき一緒にログインしているUserIdを保存したいのでセッション情報を取得して`task.setUser(account)`などで一緒に保存
   - `th:href="@{'/tasks/edit/' + ${task.id}`という形にするとtasks/edit/1などタスクのIDの情報を含めて編集フォームに遷移できる  
       → Get /edit/{id} でマッピングして`(@PathVariable Long id)`でURLに含まれる動的パラメータを受け取りリポジトリでidをDBから探して編集フォームに渡す  
-  → POST /tasks/updateなどで編集したい情報をタスクIDと共にデータを送ってDBに更新処理をする(タスクIDを送らないと新規作成になってしまう)  
+  → POST /tasks/updateなどで編集したい情報をタスクIDと共にデータを送ってDBに更新処理をする(タスクIDを送らないと新規作成になってしまう)
+  - Spring Securityを実装したがわからないことだらけだったのでファイルに詳細にコメントでメモをした
+    #### Spring Security
+    - SecurityConfigはセキュリティ設定クラスで、URLごとにアクセス制限やログイン関連の細かい設定、パスワード比較時のエンコード方法の設定などができる
+    - `requestMatchers("/login")`などで/loginにアクセスするときは制限がない(ログインが必要ない)などの設定ができる
+    - `PasswordEncoder`でBCryptなどでハッシュ化して保存、認証に使用する
+    - `formLogin()`を使用するとデフォルトで`username`,`password`というフィールドを使用するのでデフォルトの名前と変えているなら`.usernameParameter()`や`.passwordParameter()`でフォームのname属性指定しないと認証がうまくいかなくなってしまうので注意
+    - `DaoAuthenticationProvider`に`UserDetailsService`を登録する(情報取得サービスを使用する)
+    - `UserDetailsServiceはUserDetails`を実装してログイン時に入力されたログインIDからDBのユーザ情報を探すクラス
+    - ログイン時に自動で`loadUserByUsername(String loginId)`を呼び出しDBからユーザー情報を探し見つけたらUserDetailsオブジェクトに変換して返す
+    - UserDetailsはUserDetailsインターフェースを実装したクラスで、Spring Securityが必要とするユーザー情報(ID、パスワード、権限など)をまとめる
