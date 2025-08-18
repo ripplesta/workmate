@@ -9,8 +9,8 @@
 - サンプルファイルを作成してデータの受け渡しも問題なく実行できた
 
   #### 学びメモ
-  - GetMapping("/hello")で/helloにアクセスするとそのメソッドが実行される  
-      → return "hello";でtemplate/hello.htmlを表示する
+  - `GetMapping("/hello")`で/helloにアクセスするとそのメソッドが実行される  
+      → `return "hello"`;で`template/hello.html`を表示する
 
 ### 「ログイン機能」実装記録
 - 入力フォームからログインIDとパスワードを受け取る  
@@ -86,18 +86,18 @@
   - セッションに保存されている情報を取得して`findByUser(loginUser)`でユーザーIDが一致しているタスクの情報をDBから持ってきてhtml側に渡し表示する
   - 1つのコントローラーに登録、編集、削除の処理を実装した
   - 登録時にフォームから送られてきたデータをDBに保存する時userIdだけは現在のセッション情報から持ってくる
-  - フォームは同じものをform th:action=をつかって登録か編集かを判断して表示させることもできる  
-      → form th:action="${taskForm.id == null ? @{(/tasks/create)} : @{(/tasks/edit/update)}"でidに何も入ってなければ登録、入っていれば編集になる  
+  - フォームは同じものを`form th:action=`をつかって登録か編集かを判断して表示させることもできる  
+      → `form th:action="${taskForm.id == null ? @{(/tasks/create)} : @{(/tasks/edit/update)}"`でidに何も入ってなければ登録、入っていれば編集になる  
    他の記述もth:ifで分岐させてどっちかを表示されるなどが可能
   - `RequestMapping("/tasks")`で全体の共通パスになる
     `@GetMapping("/new")`などにすると/tasks/newとなる
   - `Repository`はJPAの内部機能によって決められた命名規則でメソッド名を書くと自動生成してくれる
     例 `findByLoginId(String loginId)`で渡されたログインIDを検索  
     `findByUser(Account user)`とすると`@ManyToOne`で外部キーを参照しているので自動でuser_idに変換して検索  
-  - `return "redirect:/でそのページにリダイレクト  
+  - `return "redirect:/`でそのページにリダイレクト  
     redirectはhtmlではなくブラウザに指示. 
-    例えばredirect:/tasks/newなら/tasks/newというURLにGETアクセスする  
-    SpringはそのURLに対応する@GetMapping("/tasks/new")を探す  
+    例えば`redirect:/tasks/new`なら/tasks/newというURLにGETアクセスする  
+    SpringはそのURLに対応する`@GetMapping("/tasks/new")`を探す  
 
 ## 3週目(8/4~8/10)
 ### タスク機能実装記録
@@ -110,6 +110,7 @@
   - `th:href="@{'/tasks/edit/' + ${task.id}`という形にするとtasks/edit/1などタスクのIDの情報を含めて編集フォームに遷移できる  
       → Get /edit/{id} でマッピングして`(@PathVariable Long id)`でURLに含まれる動的パラメータを受け取りリポジトリでidをDBから探して編集フォームに渡す  
   → POST /tasks/updateなどで編集したい情報をタスクIDと共にデータを送ってDBに更新処理をする(タスクIDを送らないと新規作成になってしまう)
+  - 削除を押すとタスクのIDを`@PathVariable`で受け取って`findById()`でDBからタスクを探し`teskRepository.delete()`でそれを削除する
   - Spring Securityを実装したがわからないことだらけだったのでファイルに詳細にコメントでメモをした
     #### Spring Security
     - SecurityConfigはセキュリティ設定クラスで、URLごとにアクセス制限やログイン関連の細かい設定、パスワード比較時のエンコード方法の設定などができる
