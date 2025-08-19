@@ -1,11 +1,13 @@
 package com.example.workmate.service;
 
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.example.workmate.domain.Account;
+import com.example.workmate.domain.BotResponse;
 import com.example.workmate.domain.ChatMessage;
+import com.example.workmate.repository.BotResponseRepository;
 import com.example.workmate.repository.ChatMessageRepository;
 
 @Service
@@ -13,22 +15,26 @@ public class ChatBotService {
 	
 	private final ChatMessageRepository chatMessageRepository;
 	
-	private final Map<String, String> chitChatResponses = Map.ofEntries(
-			Map.entry("おはよう", "おはようございます！今日も一緒に頑張りましょう"),
-			Map.entry("こんにちは", "こんにちは！今日はどんな一日になりそうですか？"),
-			Map.entry("おやすみ", "おやすみなさい　明日も頑張りましょう"),
-			Map.entry("疲れた", "お疲れ様です。ちょっと休憩して、深呼吸しましょう"),
-			Map.entry("やる気がない", "無理せず、小さなことから始めてみませんか？"),
-			Map.entry("天気がいい", "そうですね！こんな日に気分も上がりますね！"),
-			Map.entry("雨", "雨の日は室内作業に集中するチャンスですよ"),
-			Map.entry("暑い", "水分補給を忘れずに！冷たい飲み物でもどうぞ"),
-			Map.entry("寒い", "温かい飲み物や厚着をして体を温めましょう"),
-			Map.entry("お腹すいた", "作業の合間にちょっと軽食をどうぞ")
-	);
+	private final BotResponseRepository botResponseRepository;
 	
-	public ChatBotService(ChatMessageRepository chatRepository) {
+//	private final Map<String, String> chitChatResponses = Map.ofEntries(
+//			Map.entry("おはよう", "おはようございます！今日も一緒に頑張りましょう"),
+//			Map.entry("こんにちは", "こんにちは！今日はどんな一日になりそうですか？"),
+//			Map.entry("おやすみ", "おやすみなさい　明日も頑張りましょう"),
+//			Map.entry("疲れた", "お疲れ様です。ちょっと休憩して、深呼吸しましょう"),
+//			Map.entry("やる気がない", "無理せず、小さなことから始めてみませんか？"),
+//			Map.entry("天気がいい", "そうですね！こんな日に気分も上がりますね！"),
+//			Map.entry("雨", "雨の日は室内作業に集中するチャンスですよ"),
+//			Map.entry("暑い", "水分補給を忘れずに！冷たい飲み物でもどうぞ"),
+//			Map.entry("寒い", "温かい飲み物や厚着をして体を温めましょう"),
+//			Map.entry("お腹すいた", "作業の合間にちょっと軽食をどうぞ")
+//	);
+	
+	public ChatBotService(ChatMessageRepository chatRepository, BotResponseRepository botResRepository) {
 		this.chatMessageRepository = chatRepository;
+		this.botResponseRepository = botResRepository;
 	}
+	
 	
 	public void handleUserMessage(Account user, String messageText) {
 		//ユーザーメッセージ保存
@@ -50,13 +56,13 @@ public class ChatBotService {
 	}
 	
 	private String generateReply(String userInput) {
-		//雑談パターン判定
-		for(Map.Entry<String, String>  entry : chitChatResponses.entrySet()) {
-			if(userInput.contains(entry.getKey())) {
-				return entry.getValue();
-			}
-		}
+		//DB検索(部分一致)
+		List<BotResponse> generateReply = botResponseRepository.findByKeywordContainingIgnoreCase(userInput);
 		
+		if(!generateReply.isEmpty()) {
+			//キーワードからヒットした返答の中から1番目(indexの0)を取り出し返す
+			return generateReply.get(0).getTemplateText();
+		}
 		//デフォルト応答(今は簡易)
 		return "なるほど！その件についてもう少し教えてください";
 	}

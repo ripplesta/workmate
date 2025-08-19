@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.ChatMessage;
+import com.example.workmate.repository.BotResponseRepository;
 import com.example.workmate.repository.ChatMessageRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.service.ChatBotService;
@@ -22,10 +23,12 @@ public class ChatController {
 	
 	private final ChatBotService chatBotService;
 	private final ChatMessageRepository chatMessageRepository;
+	private final BotResponseRepository botResponseRepository;
 	
-	public ChatController(ChatBotService chatBotService, ChatMessageRepository chatMessageRepository) {
+	public ChatController(ChatBotService chatBotService, ChatMessageRepository chatMessageRepository, BotResponseRepository botResRepository) {
 		this.chatBotService = chatBotService;
 		this.chatMessageRepository = chatMessageRepository;
+		this.botResponseRepository = botResRepository;
 	}
 	
 	@GetMapping

@@ -64,6 +64,26 @@ body {
     border-style: solid;
     border-color: transparent #FFFFFF transparent transparent;
 }
+.message.user .footer {
+/*    display: flex;*/
+/*    justify-content: flex-end;*/
+	position: absolute;
+    bottom: 0;
+    left: -25px;
+    font-size: 10px;
+    color: #666;
+    margin-top: 10px; 
+}
+
+.message.bot .footer {
+    position: absolute;
+    bottom: 0;
+    right: -25px;
+    font-size: 10px;
+    color: #666;
+    margin-top: 10px;
+}
+
 
 .form {
     display: flex;
