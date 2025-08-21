@@ -27,7 +27,7 @@ public class LoginController {
 	@GetMapping("/logout-success")
 	public String logoutSuccess() {
 		System.out.println(">>> logoutSuccess() 呼ばれた！");
-		return "redirect:/login";
+		return "logout";
 	}
 
 }
