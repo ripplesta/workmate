@@ -69,7 +69,7 @@ body {
 /*    justify-content: flex-end;*/
 	position: absolute;
     bottom: 0;
-    left: -25px;
+    left: -50px;
     font-size: 10px;
     color: #666;
     margin-top: 10px; 
@@ -78,7 +78,7 @@ body {
 .message.bot .footer {
     position: absolute;
     bottom: 0;
-    right: -25px;
+    right: -50px;
     font-size: 10px;
     color: #666;
     margin-top: 10px;
@@ -111,4 +111,12 @@ body {
 
 .form button:hover {
     opacity: 0.9;
+}
+
+a {
+    text-decoration:none;
+}
+
+div.center {
+    text-align: center;
 }

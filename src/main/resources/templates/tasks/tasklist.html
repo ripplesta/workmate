@@ -15,7 +15,7 @@
             <option value="完了" th:selected="${status=='完了'}">完了</option>
         </select>
         優先度：
-        <select name="prioriy">
+        <select name="priority">
             <option value="">--選択--</option>
             <option value="高" th:selected="${priority=='高'}">高</option>
             <option value="中" th:selected="${priority=='中'}">中</option>
@@ -85,6 +85,6 @@
         </tbody>
     </table>
     <a th:href="@{/tasks/new}">タスクを登録</a>
-    
+    <a th:href="@{/dashboard}">メニューに戻る</a>
 </body>
 </html>

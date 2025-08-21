@@ -1,6 +1,7 @@
 package com.example.workmate.service;
 
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.stereotype.Service;
 
@@ -57,14 +58,30 @@ public class ChatBotService {
 	
 	private String generateReply(String userInput) {
 		//DB検索(部分一致)
-		List<BotResponse> generateReply = botResponseRepository.findByKeywordContainingIgnoreCase(userInput);
+		List<BotResponse> generateReply = botResponseRepository.findByInputMatchesKeyword(userInput);
 		
-		if(!generateReply.isEmpty()) {
-			//キーワードからヒットした返答の中から1番目(indexの0)を取り出し返す
-			return generateReply.get(0).getTemplateText();
+		if(generateReply.isEmpty()) {
+			return "なるほど！その件についてもう少し教えてください";
 		}
-		//デフォルト応答(今は簡易)
-		return "なるほど！その件についてもう少し教えてください";
+		//キーワードで出た定型文の優先度の合計
+		int totalWeight = generateReply.stream()
+				.mapToInt(BotResponse::getPriority)
+				.sum();
+		
+		//0～合計値‐1からランダムに数字を出す
+		int randomValue = new Random().nextInt(totalWeight);
+		
+		//優先度を一つずつ出して合計しランダムで出した数字を超えたらその定型文を返す
+		int current = 0;
+		for(BotResponse res : generateReply) {
+			current += res.getPriority();
+			if(randomValue < current) {
+				return res.getTemplateText();
+			}
+		}
+		
+		//デフォルト応答(理論上使わない)
+		return generateReply.get(0).getTemplateText();
 	}
 
 }

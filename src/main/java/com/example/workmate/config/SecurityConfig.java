@@ -32,7 +32,7 @@ public class SecurityConfig {
         http
         	// URLごとにアクセス制御設定
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/home", "/login", "/register", "/images/**", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/home", "/login", "/register","/logout-success", "/images/**", "/css/**", "/js/**").permitAll()
                 .anyRequest().authenticated() // それ以外はログイン必須
             )
             // ログインフォームの設定
@@ -48,7 +48,10 @@ public class SecurityConfig {
             // ログアウト設定
             .logout(logout -> logout
                 .logoutUrl("/logout") // ログアウト処理のURL
-                .logoutSuccessUrl("/login?logout") // ログアウト成功時の遷移先
+                .logoutSuccessUrl("/logout-success") // ログアウト成功時の遷移先
+                .invalidateHttpSession(true) // セッション破棄
+                .clearAuthentication(true)   // 認証情報クリア
+                .deleteCookies("JSESSIONID") // Cookie削除（ここは任意)
                 .permitAll()
             );
         return http.build(); // 設定を反映

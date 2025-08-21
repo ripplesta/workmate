@@ -23,42 +23,11 @@ public class LoginController {
 		return "login";
 	}
 	
-	//Spring Securityを導入したためこのPostMappingは必要なくなった
 	
-	//Postでアクセスしたときにこのメソッドが実行される
-//	@PostMapping("/login")
-//	public String login(@ModelAttribute @Validated LoginForm loginForm, BindingResult bindingResult, HttpSession session, Model model) {
-//		
-//		
-//		//入力エラーがあれば戻る
-//		if(bindingResult.hasErrors()) {
-//			return "login";
-//		}
-//		
-//		//ログインしたときにDBに保存されているそのログインIDと同じものの情報をインスタンスに格納
-//		Optional<Account> optionalAccount = accountRepository.findByLoginId(loginForm.getLoginId());
-//
-//		
-//		if(optionalAccount.isPresent()){
-//			Account account = optionalAccount.get();
-//			
-//			
-//			//入力されたパスワードとDBに保存されているパスワードを照合してtrueならアカウント情報をセッションに保存してメニュー画面へ
-//			if(account.getPassword().equals(loginForm.getPassword())) {
-//				session.setAttribute("loginUser", account);
-//				return "redirect:/dashboard";
-//			}
-//		}
-//		
-//		//上のifがtrueでなければログインエラーを返し遷移しない
-//		model.addAttribute("loginError", "ユーザー名またはパスワードが違います");
-//		return "login";	
-//	}
-	
-	@GetMapping("/logout")
-	public String logout() {
-		//ログアウトするときにログアウトしますかと表示するかログアウト画面に遷移させようか考えている
-		return "logout";
+	@GetMapping("/logout-success")
+	public String logoutSuccess() {
+		System.out.println(">>> logoutSuccess() 呼ばれた！");
+		return "redirect:/login";
 	}
 
 }
