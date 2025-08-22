@@ -102,7 +102,6 @@
 ## 3週目(8/4~8/10)
 ### タスク機能実装記録
 - 編集機能の続きを実装
-- Spring Securityを利用したセキュリティ機能を導入
 - タスクの検索やソート機能
 
   #### 学びメモ
@@ -112,12 +111,39 @@
   → POST /tasks/updateなどで編集したい情報をタスクIDと共にデータを送ってDBに更新処理をする(タスクIDを送らないと新規作成になってしまう)
   - 削除を押すとタスクのIDを`@PathVariable`で受け取って`findById()`でDBからタスクを探し`teskRepository.delete()`でそれを削除する
   - Spring Securityを実装したがわからないことだらけだったのでファイルに詳細にコメントでメモをした
-    #### Spring Security
-    - SecurityConfigはセキュリティ設定クラスで、URLごとにアクセス制限やログイン関連の細かい設定、パスワード比較時のエンコード方法の設定などができる
-    - `requestMatchers("/login")`などで/loginにアクセスするときは制限がない(ログインが必要ない)などの設定ができる
-    - `PasswordEncoder`でBCryptなどでハッシュ化して保存、認証に使用する
-    - `formLogin()`を使用するとデフォルトで`username`,`password`というフィールドを使用するのでデフォルトの名前と変えているなら`.usernameParameter()`や`.passwordParameter()`でフォームのname属性指定しないと認証がうまくいかなくなってしまうので注意
-    - `DaoAuthenticationProvider`に`UserDetailsService`を登録する(情報取得サービスを使用する)
-    - `UserDetailsServiceはUserDetails`を実装してログイン時に入力されたログインIDからDBのユーザ情報を探すクラス
-    - ログイン時に自動で`loadUserByUsername(String loginId)`を呼び出しDBからユーザー情報を探し見つけたらUserDetailsオブジェクトに変換して返す
-    - UserDetailsはUserDetailsインターフェースを実装したクラスで、Spring Securityが必要とするユーザー情報(ID、パスワード、権限など)をまとめる
+
+### ソート・検索機能実装記録
+- 簡単な検索やソート機能
+- 検索はタイトルにキーワードで検索して絞る
+- ソートは単純に期限日に対して昇順にする
+#### 学習メモ
+- リンクにsortBy=""を埋め込みRequestParamで受け取る
+- `List<Task> tasks = taskRepository.findAll(Sort.by(sortBy).ascending())`でsortByによって呼び出された属性にascendingで昇順にして返す
+- 検索はリポジトリに`findByTitleContaining(String keyword)`などを用意しておき、フォームアクションでKeywordを受け取って絞られたタスクを返す
+
+### Spring Securityの導入
+- アクセス制限を付与(ログインしていないとアクセスできない)
+- 新規登録時にパスワードをBCryptで暗号化　ログイン時にもパスワードをBCryptを使って認証
+- ログアウトの処理(セッション情報の破棄、認証情報のクリアなど)
+  #### 学習メモ
+  - 今後ログイン情報を取得したいときは
+    `@AuthenticationPrincipal AccountUserDetails userDetails`
+    `Account user = userDetails.getAccount()`などで取得できる
+  - SecurityConfigはセキュリティ設定クラスで、URLごとにアクセス制限やログイン関連の細かい設定、パスワード比較時のエンコード方法の設定などができる
+  - `requestMatchers("/login")`などで/loginにアクセスするときは制限がない(ログインが必要ない)などの設定ができる
+  - `PasswordEncoder`でBCryptなどでハッシュ化して保存、認証に使用する
+  - `formLogin()`を使用するとデフォルトで`username`,`password`というフィールドを使用するのでデフォルトの名前と変えているなら`.usernameParameter()`や`.passwordParameter()`でフォームのname属性指定しないと認証がうまくいかなくなってしまうので注意
+  - `DaoAuthenticationProvider`に`UserDetailsService`を登録する(情報取得サービスを使用する)
+  - `UserDetailsServiceはUserDetails`を実装してログイン時に入力されたログインIDからDBのユーザ情報を探すクラス
+  - ログイン時に自動で`loadUserByUsername(String loginId)`を呼び出しDBからユーザー情報を探し見つけたらUserDetailsオブジェクトに変換して返す
+  - UserDetailsはUserDetailsインターフェースを実装したクラスで、Spring Securityが必要とするユーザー情報(ID、パスワード、権限など)をまとめる
+## 4週目(8/11~8/17)
+### ソート機能+検索機能の複合実装記録
+- もう少し複雑であったら便利のような難しいものに挑戦してみたくて実装した
+- タイトルやカテゴリなど特定の中でキーワードで検索して絞れる
+- 作成日や期限日を昇順や降順にできる
+- 上記の機能を複合して使うことも可能
+
+#### 学習メモ
+- `JpaSpecificationExecutor`をリポジトリに追加すると柔軟な動的検索ができる
+- 
