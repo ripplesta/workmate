@@ -1,6 +1,7 @@
 # WorkMate学習記録
 
 ## 1週目(7/21~7/27)  
+
 ###  Spting Bootを使ったプロジェクトの初作成
 - まず初めに動作確認をしたがファイルを作成しようとしてエラーが発生  
     →　Servletとjspを使用するものだと思っていたが.javaとHTMLで作成するのだと理解した
@@ -74,6 +75,7 @@
 - `accountRepository.save(newUser)`で格納されているデータをDBに保存
 
 ## 2週目(7/28~8/3) 
+
 ### タスク管理機能実装記録
 - ユーザーごとにタスクを表示
 - 登録や編集・削除ボタンで管理
@@ -100,6 +102,7 @@
     SpringはそのURLに対応する`@GetMapping("/tasks/new")`を探す  
 
 ## 3週目(8/4~8/10)
+
 ### タスク機能実装記録
 - 編集機能の続きを実装
 - タスクの検索やソート機能
@@ -116,15 +119,17 @@
 - 簡単な検索やソート機能
 - 検索はタイトルにキーワードで検索して絞る
 - ソートは単純に期限日に対して昇順にする
-#### 学習メモ
-- リンクにsortBy=""を埋め込みRequestParamで受け取る
-- `List<Task> tasks = taskRepository.findAll(Sort.by(sortBy).ascending())`でsortByによって呼び出された属性にascendingで昇順にして返す
-- 検索はリポジトリに`findByTitleContaining(String keyword)`などを用意しておき、フォームアクションでKeywordを受け取って絞られたタスクを返す
+
+  #### 学習メモ
+  - リンクにsortBy=""を埋め込みRequestParamで受け取る
+  - `List<Task> tasks = taskRepository.findAll(Sort.by(sortBy).ascending())`でsortByによって呼び出された属性にascendingで昇順にして返す
+  - 検索はリポジトリに`findByTitleContaining(String keyword)`などを用意しておき、フォームアクションでKeywordを受け取って絞られたタスクを返す
 
 ### Spring Securityの導入
 - アクセス制限を付与(ログインしていないとアクセスできない)
 - 新規登録時にパスワードをBCryptで暗号化　ログイン時にもパスワードをBCryptを使って認証
 - ログアウトの処理(セッション情報の破棄、認証情報のクリアなど)
+
   #### 学習メモ
   - 今後ログイン情報を取得したいときは
     `@AuthenticationPrincipal AccountUserDetails userDetails`
@@ -138,12 +143,37 @@
   - ログイン時に自動で`loadUserByUsername(String loginId)`を呼び出しDBからユーザー情報を探し見つけたらUserDetailsオブジェクトに変換して返す
   - UserDetailsはUserDetailsインターフェースを実装したクラスで、Spring Securityが必要とするユーザー情報(ID、パスワード、権限など)をまとめる
 ## 4週目(8/11~8/17)
+
 ### ソート機能+検索機能の複合実装記録
 - もう少し複雑であったら便利のような難しいものに挑戦してみたくて実装した
 - タイトルやカテゴリなど特定の中でキーワードで検索して絞れる
 - 作成日や期限日を昇順や降順にできる
 - 上記の機能を複合して使うことも可能
 
-#### 学習メモ
-- `JpaSpecificationExecutor`をリポジトリに追加すると柔軟な動的検索ができる
-- 
+  #### 学習メモ
+  - `JpaSpecificationExecutor`をリポジトリに追加すると柔軟な動的検索ができる
+  - 検索条件を組み立てるためのクラスTaskSpecificationsを作成し、  
+    `public static Specification<Task> titleContains(String title) {
+        return (root, query, cb) ->  
+            (title == null || title.isEmpty()) ? null :
+            cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
+    }`　など検索条件のメソッドを記述する  
+  - フォームアクションで検索・ソートしたい情報をRequestParamで受け取る
+  - `Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
+												.and(TaskSpecifications.titleContains(title))`…  
+    と組み合わせの情報を詰めていく  
+  - `Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending()`  
+    でソートの方向の情報を受け取り`List<Task> tasks = taskRepository.findAll(spec, sort)`で受け取った情報で検索・ソートをして実行した結果のタスクを返していく
+  - HtML側は`th:value`やselectで選択式にして`<option value="仕事" th:selected="${category=='仕事'}">仕事</option>`で情報を送る
+
+### チャットボット風機能実装記録
+- チャットボットページを作成し、そこでやりとりができる
+- メッセージをユーザーとボットで区別して やりとりしたメッセージをDBに保存し、履歴も見れる
+- まずは単純にルールベースをキーワードで反応するようにした
+- 現状はメッセージを送った後は同じ画面に遷移させる(更新処理)
+
+  #### 学習メモ
+  - エンティティに`@Enumerated(EnumType.STRING)
+	private SenderType senderType;`を用意してUSERかBOTかを区別する
+  - メッセージをDBに保存する処理を@PostMappingでメッセージが送られたときに実行する(しっかりuserIdの情報も送らないとユーザーごとにメッセージが表示されなくなってしまう)
+  - 
