@@ -1,5 +1,6 @@
 package com.example.workmate.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -57,12 +58,20 @@ public class ChatBotService {
 	}
 	
 	private String generateReply(String userInput) {
-		//DB検索(部分一致)
-		List<BotResponse> generateReply = botResponseRepository.findByInputMatchesKeyword(userInput);
+		// キーワードがユーザー入力を含む場合
+		List<BotResponse> matchByKeyword = botResponseRepository.findByKeywordContainingIgnoreCase(userInput);
+		// ユーザー入力がキーワードを含む場合
+		List<BotResponse> matchByInput = botResponseRepository.findByInputMatchesKeyword(userInput);
 		
-		if(generateReply.isEmpty()) {
-			return "なるほど！その件についてもう少し教えてください";
+		// 検索結果を合わせる(重複は除去)
+		List<BotResponse> generateReply = new ArrayList<>();
+		generateReply.addAll(matchByInput);
+		for(BotResponse res : matchByKeyword) {
+			if(!generateReply.contains(res)) {
+				generateReply.add(res);
+			}
 		}
+		
 		//キーワードで出た定型文の優先度の合計
 		int totalWeight = generateReply.stream()
 				.mapToInt(BotResponse::getPriority)
@@ -78,6 +87,10 @@ public class ChatBotService {
 			if(randomValue < current) {
 				return res.getTemplateText();
 			}
+		}
+		
+		if(generateReply.isEmpty()) {
+			return "なるほど！その件についてもう少し教えてください";
 		}
 		
 		//デフォルト応答(理論上使わない)
