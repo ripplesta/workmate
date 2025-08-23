@@ -13,5 +13,7 @@ public interface BotResponseRepository extends JpaRepository<BotResponse, Long> 
 	List<BotResponse> findByKeywordContainingIgnoreCase(String keyword);
 	@Query("SELECT res FROM BotResponse res WHERE :input LIKE CONCAT('%', res.keyword, '%')")
 	List<BotResponse> findByInputMatchesKeyword(@Param("input") String input);
+	// タグで検索できるように
+	List<BotResponse> findByTag_Name(String tagName);
 
 }

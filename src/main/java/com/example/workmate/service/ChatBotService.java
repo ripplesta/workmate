@@ -1,13 +1,16 @@
 package com.example.workmate.service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.BotResponse;
+import com.example.workmate.domain.BotResponse.TimeRange;
 import com.example.workmate.domain.ChatMessage;
 import com.example.workmate.repository.BotResponseRepository;
 import com.example.workmate.repository.ChatMessageRepository;
@@ -37,7 +40,7 @@ public class ChatBotService {
 		this.botResponseRepository = botResRepository;
 	}
 	
-	
+	// メッセージのやりとりをDBに保存
 	public void handleUserMessage(Account user, String messageText) {
 		//ユーザーメッセージ保存
 		ChatMessage userMsg = new ChatMessage();
@@ -55,6 +58,34 @@ public class ChatBotService {
 		botMsg.setSenderType(ChatMessage.SenderType.BOT);
 		botMsg.setMessageText(botReply);
 		chatMessageRepository.save(botMsg);
+	}
+	
+	// メッセージの時間帯によってフィルタリング
+	public List<BotResponse> filterTimeRange(List<BotResponse> candidates) {
+		// 現在時間の時間帯を判定
+		LocalTime now = LocalTime.now();
+		TimeRange currentTime = getTimeRange(now);
+		
+		// 時間帯が一致するかANYのものだけに絞る
+		return candidates.stream()
+				.filter(r -> r.getTimeRange() == TimeRange.ANY || r.getTimeRange() == currentTime)
+				.collect(Collectors.toList());
+	}
+	
+	// メッセージの時間帯を返す
+	private TimeRange getTimeRange(LocalTime now) {
+		if(now.isAfter(LocalTime.of(5, 0)) && now.isBefore(LocalTime.of(12, 0))) {
+			return TimeRange.MORNING;
+		}
+		else if(now.isBefore(LocalTime.of(18, 0))) {
+			return TimeRange.AFTERNOON;
+		}
+		else if(now.isBefore(LocalTime.of(24, 0))) {
+			return TimeRange.NIGHT;
+		}
+		else {
+			return TimeRange.ANY;
+		}
 	}
 	
 	private String generateReply(String userInput) {
