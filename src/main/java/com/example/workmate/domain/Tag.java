@@ -17,6 +17,7 @@ public class Tag {
 	
 	private String name;
 	
+
 	@ManyToMany(mappedBy = "tags")
 	private Set<BotResponse> responses = new HashSet<>();
 
@@ -42,6 +43,6 @@ public class Tag {
 
 	public void setResponses(Set<BotResponse> responses) {
 		this.responses = responses;
-	}
 
+	}
 }

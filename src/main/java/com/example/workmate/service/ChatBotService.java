@@ -40,7 +40,8 @@ public class ChatBotService {
 		this.botResponseRepository = botResRepository;
 	}
 	
-	// メッセージのやりとりをDBに保存
+
+	// メッセージのやりとりをDBに保存する
 	public void handleUserMessage(Account user, String messageText) {
 		//ユーザーメッセージ保存
 		ChatMessage userMsg = new ChatMessage();
@@ -72,7 +73,7 @@ public class ChatBotService {
 				.collect(Collectors.toList());
 	}
 	
-	// メッセージの時間帯を返す
+	// メッセージの時間帯でフィルタを決める
 	private TimeRange getTimeRange(LocalTime now) {
 		if(now.isAfter(LocalTime.of(5, 0)) && now.isBefore(LocalTime.of(12, 0))) {
 			return TimeRange.MORNING;
@@ -87,6 +88,7 @@ public class ChatBotService {
 			return TimeRange.ANY;
 		}
 	}
+	
 	
 	private String generateReply(String userInput) {
 		// キーワードがユーザー入力を含む場合
