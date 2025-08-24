@@ -60,22 +60,24 @@ public class TaskController {
 	
 	// 登録フォームで入力された情報が送られる
 	@PostMapping("/create")
-	public String createTask(@AuthenticationPrincipal AccountUserDetails userDetails, @ModelAttribute TaskForm taskForm, Model model) {
+	public String create(@ModelAttribute TaskForm taskForm) {
 		
-		Account loginUser = userDetails.getAccount();
+		//Account loginUser = userDetails.getAccount();
 		
-		// フォームから送られてきたデータを格納
-		Task createTask = new Task();
-		// userIdは現在のセッションから取得し保存
-		createTask.setUser(loginUser);
-		createTask.setTitle(taskForm.getTitle());
-		createTask.setDescription(taskForm.getDescription());
-		createTask.setDueDate(taskForm.getDueDate());
-		createTask.setStatus(taskForm.getStatus());
-		createTask.setPriority(taskForm.getPriority());
-		createTask.setCategory(taskForm.getCategory());
-		// DBに保存
-		taskRepository.save(createTask);
+//		// フォームから送られてきたデータを格納
+//		Task createTask = new Task();
+//		// userIdは現在のセッションから取得し保存
+//		createTask.setUser(loginUser);
+//		createTask.setTitle(taskForm.getTitle());
+//		createTask.setDescription(taskForm.getDescription());
+//		createTask.setDueDate(taskForm.getDueDate());
+//		createTask.setStatus(taskForm.getStatus());
+//		createTask.setPriority(taskForm.getPriority());
+//		createTask.setCategory(taskForm.getCategory());
+//		// DBに保存
+//		taskRepository.save(createTask);
+		Task task = Task.fromForm(taskForm);
+		taskService.createTask(task);
 		
 		return "redirect:/tasks/tasklist";
 	}
