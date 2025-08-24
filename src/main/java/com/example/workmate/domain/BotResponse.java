@@ -28,6 +28,13 @@ public class BotResponse {
 	@Enumerated(EnumType.STRING)
 	private TimeRange timeRange;
 	
+	public enum TimeRange {
+		MORNING,
+		AFTERNOON,
+		NIGHT,
+		ANY
+	}
+	
 	@ManyToMany
 	@JoinTable(
 			name = "bot_response_tag",
@@ -35,13 +42,6 @@ public class BotResponse {
 			inverseJoinColumns = @JoinColumn(name = "tag_id")
 			)
 	private Set<Tag> tags = new HashSet<>();
-	
-	public enum TimeRange {
-		MORNING,
-		AFTERNOON,
-		NIGHT,
-		ANY
-	}
 	
 	public Long getId() {
 		return id;

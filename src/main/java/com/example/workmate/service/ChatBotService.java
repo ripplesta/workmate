@@ -12,6 +12,7 @@ import com.example.workmate.domain.Account;
 import com.example.workmate.domain.BotResponse;
 import com.example.workmate.domain.BotResponse.TimeRange;
 import com.example.workmate.domain.ChatMessage;
+import com.example.workmate.domain.Tag;
 import com.example.workmate.repository.BotResponseRepository;
 import com.example.workmate.repository.ChatMessageRepository;
 
@@ -62,18 +63,18 @@ public class ChatBotService {
 	}
 	
 	// メッセージの時間帯によってフィルタリング
-	public List<BotResponse> filterTimeRange(List<BotResponse> candidates) {
+	public List<BotResponse> filterByTimeRange(List<BotResponse> responses) {
 		// 現在時間の時間帯を判定
 		LocalTime now = LocalTime.now();
 		TimeRange currentTime = getTimeRange(now);
 		
 		// 時間帯が一致するかANYのものだけに絞る
-		return candidates.stream()
+		return responses.stream()
 				.filter(r -> r.getTimeRange() == TimeRange.ANY || r.getTimeRange() == currentTime)
 				.collect(Collectors.toList());
 	}
 	
-	// メッセージの時間帯でフィルタを決める
+	// 時間帯でフィルタを決める
 	private TimeRange getTimeRange(LocalTime now) {
 		if(now.isAfter(LocalTime.of(5, 0)) && now.isBefore(LocalTime.of(12, 0))) {
 			return TimeRange.MORNING;
@@ -89,24 +90,25 @@ public class ChatBotService {
 		}
 	}
 	
-	
-	private String generateReply(String userInput) {
-		// キーワードがユーザー入力を含む場合
-		List<BotResponse> matchByKeyword = botResponseRepository.findByKeywordContainingIgnoreCase(userInput);
-		// ユーザー入力がキーワードを含む場合
-		List<BotResponse> matchByInput = botResponseRepository.findByInputMatchesKeyword(userInput);
-		
-		// 検索結果を合わせる(重複は除去)
-		List<BotResponse> generateReply = new ArrayList<>();
-		generateReply.addAll(matchByInput);
-		for(BotResponse res : matchByKeyword) {
-			if(!generateReply.contains(res)) {
-				generateReply.add(res);
+	// タグに合うものを返答に使う
+	private List<BotResponse> filterByTag(List<BotResponse> responses, String tagName) {
+		List<BotResponse> filtered = new ArrayList<>();
+		for(BotResponse res: responses) {
+			for(Tag tag: res.getTags()) {
+				if(tag.getName().equalsIgnoreCase(tagName)) {
+					filtered.add(res);
+					break;
+				}
 			}
 		}
+		return filtered;
+	}
+	
+	// 優先度で定型文をランダムに返す
+	public String chooseByPriority(List<BotResponse> responses) {
 		
 		//キーワードで出た定型文の優先度の合計
-		int totalWeight = generateReply.stream()
+		int totalWeight = responses.stream()
 				.mapToInt(BotResponse::getPriority)
 				.sum();
 		
@@ -115,19 +117,60 @@ public class ChatBotService {
 		
 		//優先度を一つずつ出して合計しランダムで出した数字を超えたらその定型文を返す
 		int current = 0;
-		for(BotResponse res : generateReply) {
+		for(BotResponse res : responses) {
 			current += res.getPriority();
 			if(randomValue < current) {
 				return res.getTemplateText();
 			}
 		}
+		// デフォルト応答(理論上使わない)
+		return responses.get(0).getTemplateText();
+	}
+	
+//	private String taskManegementJudge(String userInput) {
+//		
+//		// タスク管理コマンド判定
+//		// あとでコントローラーにかいたCRUD処理をサービスに切り分けサービスを適用する
+//		if(userInput.contains("タスク追加")) {
+//			return taskService.addTask(userInput);
+//		}
+//		else if(userInput.contains("タスク一覧")) {
+//			return taskService.listTasks();
+//		}
+//		else if(userInput.contains("タスク削除")) {
+//			return taskService.deleteTask(userInput);
+//		}
+//		
+//		return generateReply(userInput);
+	
+	private String generateReply(String userInput) {
+		// タスク管理コマンド系でなければ雑談を返す
+		// キーワードがユーザー入力を含む場合
+		List<BotResponse> matchByKeyword = botResponseRepository.findByKeywordContainingIgnoreCase(userInput);
+		// ユーザー入力がキーワードを含む場合
+		List<BotResponse> matchByInput = botResponseRepository.findByInputMatchesKeyword(userInput);
+		
+		// 検索結果を合わせる(重複は除去)
+		List<BotResponse> candidates = new ArrayList<>();
+		candidates.addAll(matchByInput);
+		for(BotResponse res : matchByKeyword) {
+			if(!candidates.contains(res)) {
+				candidates.add(res);
+			}
+		}
+		// フィルタリングを通す
+		candidates = filterByTimeRange(candidates);
+		candidates = filterByTag(candidates, "(tagname)");
+		
+		String generateReply = chooseByPriority(candidates);
 		
 		if(generateReply.isEmpty()) {
 			return "なるほど！その件についてもう少し教えてください";
 		}
 		
 		//デフォルト応答(理論上使わない)
-		return generateReply.get(0).getTemplateText();
+		return generateReply;
 	}
+		
 
 }
