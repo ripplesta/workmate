@@ -162,13 +162,12 @@ public class ChatBotService {
 		candidates = filterByTimeRange(candidates);
 		candidates = filterByTag(candidates, "(tagname)");
 		
-		String generateReply = chooseByPriority(candidates);
-		
-		if(generateReply.isEmpty()) {
+		if(candidates.isEmpty()) {
 			return "なるほど！その件についてもう少し教えてください";
 		}
 		
-		//デフォルト応答(理論上使わない)
+		String generateReply = chooseByPriority(candidates);
+		
 		return generateReply;
 	}
 		

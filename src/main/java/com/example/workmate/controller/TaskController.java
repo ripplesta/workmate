@@ -2,7 +2,6 @@ package com.example.workmate.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,14 +19,20 @@ import com.example.workmate.domain.Task;
 import com.example.workmate.dto.TaskForm;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
+import com.example.workmate.service.TaskService;
 import com.example.workmate.spec.TaskSpecifications;
 
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
 	
-	@Autowired
-	private TaskRepository taskRepository;
+	private final TaskRepository taskRepository;
+	private final TaskService taskService;
+	
+	public TaskController(TaskRepository taskRepository, TaskService taskService) {
+		this.taskRepository = taskRepository;
+		this.taskService = taskService;
+	}
 	
 	// ここがタスク一覧でtasklistにアクセスするとここが実行される
 	@GetMapping("/tasklist")
@@ -40,10 +45,8 @@ public class TaskController {
 			return "redirect:/home";
 		}
 		
-		// Long userId = loginUser.getUserId();
-		
-		List<Task> taskList = taskRepository.findByUser(loginUser);
-		model.addAttribute("tasks", taskList);
+		//List<Task> taskList = taskRepository.findByUser(loginUser);
+		model.addAttribute("tasks", taskService.showTaskList());
 		
 		return "tasks/tasklist";
 	}
@@ -61,7 +64,7 @@ public class TaskController {
 		
 		Account loginUser = userDetails.getAccount();
 		
-		// フォームから送られてきたデータをDBに保存
+		// フォームから送られてきたデータを格納
 		Task createTask = new Task();
 		// userIdは現在のセッションから取得し保存
 		createTask.setUser(loginUser);
@@ -71,7 +74,7 @@ public class TaskController {
 		createTask.setStatus(taskForm.getStatus());
 		createTask.setPriority(taskForm.getPriority());
 		createTask.setCategory(taskForm.getCategory());
-		
+		// DBに保存
 		taskRepository.save(createTask);
 		
 		return "redirect:/tasks/tasklist";
