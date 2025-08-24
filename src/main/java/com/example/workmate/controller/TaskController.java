@@ -98,17 +98,19 @@ public class TaskController {
 		// 送られてきたデータをtaskに格納
 		Task task = Task.fromForm(taskForm);
 		
-		Account loginUser = userDetails.getAccount();
-		task.setUser(loginUser);
-		taskRepository.save(task);
+		//Account loginUser = userDetails.getAccount();
+		//task.setUser(loginUser);
+		//taskRepository.save(task);
+		taskService.updateTask(task);
 		return "redirect:/tasks/tasklist";
 	}
 
 	// 削除したいタスクのidをURLパラメータで送って削除
 	@PostMapping("/delete/{id}")
 	public String deleteTask(@PathVariable Long id) {
-		Task task = taskRepository.findById(id).orElseThrow();
-		taskRepository.delete(task);
+		//Task task = taskRepository.findById(id).orElseThrow();
+		//taskRepository.delete(task);
+		taskService.deleteTask(id);
 		return "redirect:/tasks/tasklist";
 	}
 	
