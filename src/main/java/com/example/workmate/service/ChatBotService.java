@@ -117,7 +117,7 @@ public class ChatBotService {
 		for(BotResponse res: responses) {
 			for(Tag tag: res.getTags()) {
 				//if(tag.getName().equalsIgnoreCase(tagName)) {
-				if(tags.contains(tag.getName()))
+				if(tags.contains(tag.getName())) {
 					filtered.add(res);
 					break;
 				}
