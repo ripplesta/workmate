@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.example.workmate.domain.Task;
 
 public class TaskForm {
@@ -19,6 +21,7 @@ public class TaskForm {
 	private String description;
 	
 	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate dueDate;
 
 	private String status;

@@ -2,8 +2,6 @@ package com.example.workmate.controller;
 
 import java.util.List;
 
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +18,6 @@ import com.example.workmate.dto.TaskForm;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.service.TaskService;
-import com.example.workmate.spec.TaskSpecifications;
 
 @Controller
 @RequestMapping("/tasks")
@@ -114,6 +111,7 @@ public class TaskController {
 		return "redirect:/tasks/tasklist";
 	}
 	
+	// 検索やソートの組み合わせを実行
 	@GetMapping("/search")
 	public String searchTasks(@RequestParam(required = false) String title,
 							  @RequestParam(required = false) String status,
@@ -121,25 +119,32 @@ public class TaskController {
 							  @RequestParam(required = false) String priority,
 							  @RequestParam(defaultValue = "dueDate") String sortBy,
 							  @RequestParam(defaultValue = "asc") String order,
-							  @AuthenticationPrincipal AccountUserDetails userDetails,
 							  Model model) {
 		
-		Account loginUser = userDetails.getAccount();
+//		Account loginUser = userDetails.getAccount();
+//		
+//		// Specification組み合わせ
+//		Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
+//												.and(TaskSpecifications.titleContains(title))
+//												.and(TaskSpecifications.statusEquals(status))
+//				                                .and(TaskSpecifications.categoryEquals(category))
+//				                                .and(TaskSpecifications.priorityEquals(priority));
+//		
+//		// ソートの設定
+//		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+//		
+//		// 実行して格納
+//		List<Task> tasks = taskRepository.findAll(spec, sort);
 		
-		// Specification組み合わせ
-		Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
-												.and(TaskSpecifications.titleContains(title))
-												.and(TaskSpecifications.statusEquals(status))
-				                                .and(TaskSpecifications.categoryEquals(category))
-				                                .and(TaskSpecifications.priorityEquals(priority));
+		// 情報をサービスに渡すために格納
+		Task info = new Task();
+		info.setTitle(title);
+		info.setStatus(status);
+		info.setCategory(category);
+		info.setPriority(priority);
+		List<Task> filterTasks = taskService.searchAndSortTasks(info, sortBy, order);
 		
-		// ソートの設定
-		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-		
-		// 実行して格納
-		List<Task> tasks = taskRepository.findAll(spec, sort);
-		
-		model.addAttribute("tasks", tasks);
+		model.addAttribute("tasks", filterTasks);
 		model.addAttribute("title", title);
 		model.addAttribute("status", status);
 		model.addAttribute("category", category);
@@ -162,9 +167,8 @@ public class TaskController {
 	
 	// 検索したりソートされたものを初期化したいとき
 	@GetMapping("/refresh")
-	public String refreshTasks(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
-		Account loginUser = userDetails.getAccount();
-		List<Task> taskList = taskRepository.findByUser(loginUser);
+	public String refreshTasks(Model model) {
+		List<Task> taskList = taskService.showTaskList();
 		model.addAttribute("tasks", taskList);
 		return "redirect:/tasks/tasklist";
 	}

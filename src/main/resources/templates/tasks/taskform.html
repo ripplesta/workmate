@@ -20,7 +20,7 @@
         </div>
         <div>
             <label for="dueDate">期限：</label>
-            <input type="date" th:field="*{dueDate}" id="dueDate" />
+            <input type="date" th:field="*{dueDate}"  id="dueDate" th:value="${dueDate != null} ?  ${dueDate} : null"  />
         </div>
         <div>
             <input type="hidden" th:field="*{createdAt}" id="createdAt" />

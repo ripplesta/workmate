@@ -3,6 +3,7 @@ package com.example.workmate.service;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -90,12 +91,33 @@ public class ChatBotService {
 		}
 	}
 	
+	private static final Map<String, String> keywordToTag = Map.ofEntries(
+			Map.entry("おはよう", "挨拶"),
+			Map.entry("こんにちは", "挨拶"),
+			Map.entry("こんばんは", "挨拶"),
+			Map.entry("進捗", "進捗"),
+			Map.entry("タスク", "タスク管理"),
+			Map.entry("締切", "締切"),
+			Map.entry("優先度" , "優先度")
+		);
+	
+	private List<String> detectTagsFromMessage(String userInput) {
+		List<String> detectedTags = new ArrayList<>();
+		for(Map.Entry<String, String> entry :keywordToTag.entrySet()) {
+			if(userInput.contains(entry.getKey())) {
+				detectedTags.add(entry.getValue());
+			}
+		}
+		return detectedTags;
+	}
+	
 	// タグに合うものを返答に使う
-	private List<BotResponse> filterByTag(List<BotResponse> responses, String tagName) {
+	private List<BotResponse> filterByTag(List<BotResponse> responses, List<String> tags) {
 		List<BotResponse> filtered = new ArrayList<>();
 		for(BotResponse res: responses) {
 			for(Tag tag: res.getTags()) {
-				if(tag.getName().equalsIgnoreCase(tagName)) {
+				//if(tag.getName().equalsIgnoreCase(tagName)) {
+				if(tags.contains(tag.getName()))
 					filtered.add(res);
 					break;
 				}
@@ -103,6 +125,7 @@ public class ChatBotService {
 		}
 		return filtered;
 	}
+	
 	
 	// 優先度で定型文をランダムに返す
 	public String chooseByPriority(List<BotResponse> responses) {
@@ -127,7 +150,7 @@ public class ChatBotService {
 		return responses.get(0).getTemplateText();
 	}
 	
-//	private String taskManegementJudge(String userInput) {
+//	private String taskManegement(String userInput) {
 //		
 //		// タスク管理コマンド判定
 //		// あとでコントローラーにかいたCRUD処理をサービスに切り分けサービスを適用する
@@ -160,7 +183,8 @@ public class ChatBotService {
 		}
 		// フィルタリングを通す
 		candidates = filterByTimeRange(candidates);
-		candidates = filterByTag(candidates, "(tagname)");
+		List<String> detectedTags = detectTagsFromMessage(userInput);
+		candidates = filterByTag(candidates, detectedTags);
 		
 		if(candidates.isEmpty()) {
 			return "なるほど！その件についてもう少し教えてください";
