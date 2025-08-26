@@ -83,11 +83,8 @@ public class ChatBotService {
 		else if(now.isBefore(LocalTime.of(18, 0))) {
 			return TimeRange.AFTERNOON;
 		}
-		else if(now.isBefore(LocalTime.of(24, 0))) {
-			return TimeRange.NIGHT;
-		}
 		else {
-			return TimeRange.ANY;
+			return TimeRange.NIGHT;
 		}
 	}
 	
@@ -166,6 +163,7 @@ public class ChatBotService {
 //		
 //		return generateReply(userInput);
 	
+	// チャットの返答を作成
 	private String generateReply(String userInput) {
 		// タスク管理コマンド系でなければ雑談を返す
 		// キーワードがユーザー入力を含む場合
