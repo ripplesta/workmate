@@ -110,6 +110,7 @@ public class TaskService {
 			}
 			task.setStatus(command.getOptions("進捗"));
 			
+		}
 	}
 
 }
