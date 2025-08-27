@@ -42,6 +42,7 @@ public class ChatController {
 	@PostMapping
 	public String sendMessage(@AuthenticationPrincipal AccountUserDetails userDetails, @RequestParam String message) {
 		Account loginUser = userDetails.getAccount();
+		if(message != )
 		chatBotService.handleUserMessage(loginUser, message);
 		return "redirect:/chat";
 	}
