@@ -93,18 +93,20 @@ public class TaskService {
 		
 		return tasks;
 	}
-	
-	public void comandAction(String userInput) {
+	// チャットでのタスクコマンド用の処理
+	public void commandAction(String userInput) {
 		CommandParser parser = new CommandParser();
 		Command command = parser.parse(userInput);
 		
+		// 登録コマンド
 		if(command.getAction().equals("add")) {
 			Task task = new Task();
 			task.setTitle(command.getOptions("title"));
 			task.setDescription(command.getOptions("説明"));
 			
 			String strDue = command.getOptions("期限");
-			if(strDue != null) {
+				//String型なので型変換が必要
+				if(strDue != null) {
 				LocalDate dueDate = LocalDate.parse(strDue);
 				task.setDueDate(dueDate);
 			}
