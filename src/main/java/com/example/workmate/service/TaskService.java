@@ -94,7 +94,7 @@ public class TaskService {
 		return tasks;
 	}
 	// チャットでのタスクコマンド用の処理
-	public void commandAction(String userInput) {
+	public Task commandAction(String userInput) {
 		CommandParser parser = new CommandParser();
 		Command command = parser.parse(userInput);
 		
@@ -105,14 +105,23 @@ public class TaskService {
 			task.setDescription(command.getOptions("説明"));
 			
 			String strDue = command.getOptions("期限");
-				//String型なので型変換が必要
+				//LocalDate型なので型変換が必要
 				if(strDue != null) {
 				LocalDate dueDate = LocalDate.parse(strDue);
 				task.setDueDate(dueDate);
 			}
 			task.setStatus(command.getOptions("進捗"));
+			task.setPriority(command.getOptions("カテゴリ"));
 			
+			createTask(task);
 		}
+
+			if(conmand.getAction()equals("list")) {
+				StringBuilder sb = new Stringbuider();
+				List<Task> tasklist = showTaskList();
+				
+				for(Task tasks : tasklist) {
+					sb.append(
 	}
 
 }
