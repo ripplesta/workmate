@@ -1,7 +1,6 @@
 package com.example.workmate.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
@@ -94,7 +93,7 @@ public class TaskService {
 		return tasks;
 	}
 	// チャットでのタスクコマンド用の処理
-	public Task commandAction(String userInput) {
+	public String commandAction(String userInput) {
 		CommandParser parser = new CommandParser();
 		Command command = parser.parse(userInput);
 		
@@ -111,17 +110,46 @@ public class TaskService {
 				task.setDueDate(dueDate);
 			}
 			task.setStatus(command.getOptions("進捗"));
-			task.setPriority(command.getOptions("カテゴリ"));
+			task.setPriority(command.getOptions("優先度"));
+			task.setCategory(command.getOptions("カテゴリ"));
 			
-			createTask(task);
+			 createTask(task);
 		}
 
-			if(conmand.getAction()equals("list")) {
-				StringBuilder sb = new Stringbuider();
-				List<Task> tasklist = showTaskList();
-				
-				for(Task tasks : tasklist) {
-					sb.append(
+		if(command.getAction().equals("list")) {
+			Task filterTask = new Task();
+			filterTask.setTitle(command.getOptions("title"));
+			filterTask.setStatus(command.getOptions("進捗"));
+			filterTask.setPriority(command.getOptions("優先度"));
+			filterTask.setCategory(command.getOptions("カテゴリ"));
+			
+			String sortBy = command.getOptions("ソート") != null ? command.getOptions("ソート") : "dueDate"; 
+			String order = command.getOptions("整列") != null ? command.getOptions("整列") : "asc";
+			
+			List<Task> searchTasks = searchAndSortTasks(filterTask, sortBy, order);
+			
+			StringBuilder sb = new StringBuilder();
+					
+			for(Task tasks : searchTasks) {
+				sb.append("タスク番号：")
+				  .append(tasks.getId())
+				  .append("タスク名：")
+				  .append(tasks.getTitle())
+				  .append(" 期限：")
+				  .append(tasks.getDueDate())
+				  .append(" 進捗：")
+				  .append(tasks.getStatus())
+				  .append(" カテゴリ：")
+				  .append(tasks.getCategory())
+				  .append("\n");
+			}
+			return sb.toString();
+		}
+		
+		if(command.getAction().equals("")) {
+			
+		}
+		
+		return "操作が完了しました";
 	}
-
 }
