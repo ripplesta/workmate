@@ -1,6 +1,27 @@
 package com.example.workmate.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.example.workmate.dto.Command;
+
 public class CommandParser {
 	
-
+	public Command parse(String userInput) {
+		String[] parts = userInput.split(" /"); // 空白と/で分割処理
+		String action = parts[0].substring(1); // 例えば/addならaddを抽出
+		
+		Map<String, String> options = new HashMap<>();
+		options.put("title", parts[0].substring(parts[0].indexOf(" ") + 1));
+		
+		for(int i = 1; i < parts.length; i++) {
+			String[] value = parts[i].split(" ", 2);
+			if(value.length == 2) {
+				options.put(value[0], value[1]);
+			}
+		}
+		
+		return new Command(action, options);
+	}
+	
 }

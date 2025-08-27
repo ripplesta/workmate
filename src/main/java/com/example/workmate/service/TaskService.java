@@ -1,5 +1,7 @@
 package com.example.workmate.service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Sort;
@@ -10,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.Task;
+import com.example.workmate.dto.Command;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.spec.TaskSpecifications;
+import com.example.workmate.util.CommandParser;
 
 
 @Service
@@ -90,5 +94,22 @@ public class TaskService {
 		return tasks;
 	}
 	
+	public void comandAction(String userInput) {
+		CommandParser parser = new CommandParser();
+		Command command = parser.parse(userInput);
+		
+		if(command.getAction().equals("add")) {
+			Task task = new Task();
+			task.setTitle(command.getOptions("title"));
+			task.setDescription(command.getOptions("説明"));
+			
+			String strDue = command.getOptions("期限");
+			if(strDue != null) {
+				LocalDate dueDate = LocalDate.parse(strDue);
+				task.setDueDate(dueDate);
+			}
+			task.setStatus(command.getOptions("進捗"));
+			
+	}
 
 }
