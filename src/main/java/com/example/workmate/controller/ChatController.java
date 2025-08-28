@@ -12,10 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.ChatMessage;
+import com.example.workmate.domain.Task;
+import com.example.workmate.dto.Command;
 import com.example.workmate.repository.BotResponseRepository;
 import com.example.workmate.repository.ChatMessageRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.service.ChatBotService;
+import com.example.workmate.service.TaskService;
+import com.example.workmate.util.CommandParser;
 
 @Controller
 @RequestMapping("/chat")
@@ -24,11 +28,13 @@ public class ChatController {
 	private final ChatBotService chatBotService;
 	private final ChatMessageRepository chatMessageRepository;
 	private final BotResponseRepository botResponseRepository;
+	private final TaskService taskService;
 	
-	public ChatController(ChatBotService chatBotService, ChatMessageRepository chatMessageRepository, BotResponseRepository botResRepository) {
+	public ChatController(ChatBotService chatBotService, ChatMessageRepository chatMessageRepository, BotResponseRepository botResRepository, TaskService taskService) {
 		this.chatBotService = chatBotService;
 		this.chatMessageRepository = chatMessageRepository;
 		this.botResponseRepository = botResRepository;
+		this.taskService = taskService;
 	}
 	
 	@GetMapping
@@ -42,8 +48,26 @@ public class ChatController {
 	@PostMapping
 	public String sendMessage(@AuthenticationPrincipal AccountUserDetails userDetails, @RequestParam String message) {
 		Account loginUser = userDetails.getAccount();
-		if(message != )
-		chatBotService.handleUserMessage(loginUser, message);
+		CommandParser parser =  new CommandParser();
+		Command command = parser.parse(message);
+		
+		if(command.getAction().equals("list")) {
+			List<Task> tasks = taskService.commandListAction(command);
+			String response = taskService.formatResponse(tasks);
+			System.out.println("ここに内容を表示：" +  response + " ←確認");
+			if(response == null) {
+				response ="タスクが見つかりませんでした";
+			}
+			chatBotService.handleUserMessage(loginUser, message, response);
+		}
+		else if(command.getAction().equals("add")) {
+			String response = taskService.commandCreateAction(command);
+			chatBotService.handleUserMessage(loginUser, message, response);
+		}
+		
+		else {
+			chatBotService.handleUserMessage(loginUser, message);
+		}
 		return "redirect:/chat";
 	}
 }

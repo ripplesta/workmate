@@ -12,8 +12,10 @@ public class CommandParser {
 		String action = parts[0].substring(1); // 例えば/addならaddを抽出
 		
 		Map<String, String> options = new HashMap<>();
-		options.put("title", parts[0].substring(parts[0].indexOf(" ") + 1));
+		//options.put("title", parts[0].substring(parts[0].indexOf(" ") + 1));
 		
+		// " /"で分割して" "でさらに2つに分けてセットでMapに登録
+		//(例: /進捗 完了ならkeyが進捗 valueが完了になる)
 		for(int i = 1; i < parts.length; i++) {
 			String[] value = parts[i].split(" ", 2);
 			if(value.length == 2) {

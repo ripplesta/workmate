@@ -15,7 +15,6 @@ import com.example.workmate.dto.Command;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.spec.TaskSpecifications;
-import com.example.workmate.util.CommandParser;
 
 
 @Service
@@ -92,31 +91,30 @@ public class TaskService {
 		
 		return tasks;
 	}
-	// チャットでのタスクコマンド用の処理
-	public String commandAction(String userInput) {
-		CommandParser parser = new CommandParser();
-		Command command = parser.parse(userInput);
-		
-		// 登録コマンド
-		if(command.getAction().equals("add")) {
-			Task task = new Task();
-			task.setTitle(command.getOptions("title"));
-			task.setDescription(command.getOptions("説明"));
+	
+	// チャットコマンドのタスク登録処理
+	public String commandCreateAction(Command command) {
+		Task task = new Task();
+		task.setTitle(command.getOptions("title"));
+		task.setDescription(command.getOptions("説明"));
 			
-			String strDue = command.getOptions("期限");
-				//LocalDate型なので型変換が必要
-				if(strDue != null) {
-				LocalDate dueDate = LocalDate.parse(strDue);
-				task.setDueDate(dueDate);
-			}
-			task.setStatus(command.getOptions("進捗"));
-			task.setPriority(command.getOptions("優先度"));
-			task.setCategory(command.getOptions("カテゴリ"));
-			
-			 createTask(task);
+		String strDue = command.getOptions("期限");
+			//LocalDate型なので型変換が必要
+			if(strDue != null) {
+			LocalDate dueDate = LocalDate.parse(strDue);
+			task.setDueDate(dueDate);
 		}
+		task.setStatus(command.getOptions("進捗"));
+		task.setPriority(command.getOptions("優先度"));
+		task.setCategory(command.getOptions("カテゴリ"));
+			
+		createTask(task);
+		return "タスク登録が完了しました";
+			 
+	}
 
-		if(command.getAction().equals("list")) {
+	public List<Task> commandListAction(Command command) {
+		if(!command.getOptions().isEmpty()) {
 			Task filterTask = new Task();
 			filterTask.setTitle(command.getOptions("title"));
 			filterTask.setStatus(command.getOptions("進捗"));
@@ -125,31 +123,40 @@ public class TaskService {
 			
 			String sortBy = command.getOptions("ソート") != null ? command.getOptions("ソート") : "dueDate"; 
 			String order = command.getOptions("整列") != null ? command.getOptions("整列") : "asc";
-			
+		
 			List<Task> searchTasks = searchAndSortTasks(filterTask, sortBy, order);
-			
-			StringBuilder sb = new StringBuilder();
-					
-			for(Task tasks : searchTasks) {
-				sb.append("タスク番号：")
-				  .append(tasks.getId())
-				  .append("タスク名：")
-				  .append(tasks.getTitle())
-				  .append(" 期限：")
-				  .append(tasks.getDueDate())
-				  .append(" 進捗：")
-				  .append(tasks.getStatus())
-				  .append(" カテゴリ：")
-				  .append(tasks.getCategory())
-				  .append("\n");
+			System.out.println("確認01：" + command.getOptions("進捗"));
+			for(int i = 0; i < searchTasks.size(); i++) {
+				System.out.println("確認：" + searchTasks.get(i));
 			}
-			return sb.toString();
+			return searchTasks;
+		}
+		else {
+			List<Task> userTasks = showTaskList();
+			return userTasks;
 		}
 		
-		if(command.getAction().equals("")) {
-			
-		}
-		
-		return "操作が完了しました";
 	}
+		
+	public String formatResponse(List<Task> tasks) {
+		StringBuilder sb = new StringBuilder();
+				
+		for(Task resTasks : tasks) {
+			sb.append("タスク番号：")
+			  .append(resTasks.getId())
+			  .append(" タスク名：")
+			  .append(resTasks.getTitle())
+			  .append(" 期限：")
+			  .append(resTasks.getDueDate())
+			  .append(" 進捗：")
+			  .append(resTasks.getStatus())
+			  .append(" カテゴリ：")
+			  .append(resTasks.getCategory())
+			  .append("\n");
+		}
+		
+		return sb.toString();
+		
+	}	
+	
 }

@@ -63,6 +63,23 @@ public class ChatBotService {
 		chatMessageRepository.save(botMsg);
 	}
 	
+	// コマンド形式のやりとり用
+	public void handleUserMessage(Account user, String messageText, String response) {
+		//ユーザーメッセージ保存
+		ChatMessage userMsg = new ChatMessage();
+		userMsg.setUser(user);
+		userMsg.setSenderType(ChatMessage.SenderType.USER);
+		userMsg.setMessageText(messageText);
+		chatMessageRepository.save(userMsg);
+		
+		//Botメッセージ保存
+		ChatMessage botMsg = new ChatMessage();
+		botMsg.setUser(user);
+		botMsg.setSenderType(ChatMessage.SenderType.BOT);
+		botMsg.setMessageText(response);
+		chatMessageRepository.save(botMsg);
+	}
+	
 	// メッセージの時間帯によってフィルタリング
 	public List<BotResponse> filterByTimeRange(List<BotResponse> responses) {
 		// 現在時間の時間帯を判定
