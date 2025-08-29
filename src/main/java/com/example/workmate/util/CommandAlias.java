@@ -82,7 +82,7 @@ public class CommandAlias {
 		return DUEDATE_ALIASES.getOrDefault(input, input);
 	}
 	
-	public static String normalizeStastus(String input) {
+	public static String normalizeStatus(String input) {
 		return STATUS_ALIASES.getOrDefault(input, input);
 	}
 	
