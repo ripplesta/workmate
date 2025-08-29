@@ -117,18 +117,16 @@ public class TaskService {
 		if(!command.getOptions().isEmpty()) {
 			Task filterTask = new Task();
 			filterTask.setTitle(command.getOptions("title"));
-			filterTask.setStatus(command.getOptions("進捗"));
-			filterTask.setPriority(command.getOptions("優先度"));
-			filterTask.setCategory(command.getOptions("カテゴリ"));
+			filterTask.setStatus(command.getOptions("status"));
+			filterTask.setPriority(command.getOptions("priority"));
+			filterTask.setCategory(command.getOptions("category"));
 			
-			String sortBy = command.getOptions("ソート") != null ? command.getOptions("ソート") : "dueDate"; 
-			String order = command.getOptions("整列") != null ? command.getOptions("整列") : "asc";
+			String sortBy = command.getOptions("sort") != null ? command.getOptions("sort") : "dueDate"; 
+			String order = command.getOptions("order") != null ? command.getOptions("order") : "asc";
 		
 			List<Task> searchTasks = searchAndSortTasks(filterTask, sortBy, order);
 			System.out.println("確認01：" + command.getOptions("進捗"));
-			for(int i = 0; i < searchTasks.size(); i++) {
-				System.out.println("確認：" + searchTasks.get(i));
-			}
+
 			return searchTasks;
 		}
 		else {
@@ -141,17 +139,19 @@ public class TaskService {
 	public String formatResponse(List<Task> tasks) {
 		StringBuilder sb = new StringBuilder();
 				
-		for(Task resTasks : tasks) {
+		for(Task resTask : tasks) {
 			sb.append("タスク番号：")
-			  .append(resTasks.getId())
+			  .append(resTask.getId())
 			  .append(" タスク名：")
-			  .append(resTasks.getTitle())
+			  .append(resTask.getTitle())
 			  .append(" 期限：")
-			  .append(resTasks.getDueDate())
+			  .append(resTask.getDueDate())
 			  .append(" 進捗：")
-			  .append(resTasks.getStatus())
+			  .append(resTask.getStatus())
+			  .append(" 優先度：")
+			  .append(resTask.getPriority())
 			  .append(" カテゴリ：")
-			  .append(resTasks.getCategory())
+			  .append(resTask.getCategory())
 			  .append("\n");
 		}
 		

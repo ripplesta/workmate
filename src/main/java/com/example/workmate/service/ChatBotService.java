@@ -112,7 +112,8 @@ public class ChatBotService {
 			Map.entry("進捗", "進捗"),
 			Map.entry("タスク", "タスク管理"),
 			Map.entry("締切", "締切"),
-			Map.entry("優先度" , "優先度")
+			Map.entry("優先度" , "優先度"),
+			Map.entry("お腹すいた", "空腹")
 		);
 	
 	private List<String> detectTagsFromMessage(String userInput) {

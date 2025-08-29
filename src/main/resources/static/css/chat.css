@@ -31,7 +31,7 @@ body {
     position: relative;
     font-size: 14px;
     line-height: 1.5;
-    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .message.user {

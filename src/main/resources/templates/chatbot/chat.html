@@ -17,7 +17,7 @@
     <div class="chat-container" id="chatContainer">
         <div class="messages" id="messages">    
             <div class="message" th:each="msg : ${message}"  th:classappend="${msg.senderType.name().toLowerCase()}">
-                <span th:text="${msg.messageText}"></span>
+                <span th:utext="${msg.messageText}"></span>
                 <div class="footer"  th:text="${#temporals.format(msg.createdAt, 'MM/dd HH:mm')}"></div>
             </div>
         </div>

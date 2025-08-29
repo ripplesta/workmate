@@ -41,6 +41,10 @@ public class ChatController {
 	public String chatPage(@AuthenticationPrincipal AccountUserDetails userDetails, Model model) {
 		Account loginUser = userDetails.getAccount();
 		List<ChatMessage> message = chatMessageRepository.findByUserOrderByCreatedAtAsc(loginUser);
+		
+		for(ChatMessage msg : message) {
+			msg.setMessageText(msg.getMessageText().replace("\n", "<br>"));
+		}
 		model.addAttribute("message", message);
 		return "chatbot/chat";
 	}
@@ -54,9 +58,8 @@ public class ChatController {
 		if(command.getAction().equals("list")) {
 			List<Task> tasks = taskService.commandListAction(command);
 			String response = taskService.formatResponse(tasks);
-			System.out.println("ここに内容を表示：" +  response + " ←確認");
-			if(response == null) {
-				response ="タスクが見つかりませんでした";
+			if(response.isEmpty()) {
+				response = "タスクが見つかりませんでした";
 			}
 			chatBotService.handleUserMessage(loginUser, message, response);
 		}
