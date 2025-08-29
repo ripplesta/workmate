@@ -25,6 +25,7 @@ public class CommandParser {
 				normalizedKey = CommandAlias.normalizeStatus(value[0]);
 				normalizedKey = CommandAlias.normalizePriority(value[0]);
 				normalizedKey = CommandAlias.normalizeCategory(value[0]);
+				normalizedKey = CommandAlias.normalizeSortOption(value[0]);
 				options.put(normalizedKey, value[1]);
 			}
 		}
