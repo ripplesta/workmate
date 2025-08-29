@@ -19,7 +19,8 @@ public class CommandParser {
 		for(int i = 1; i < parts.length; i++) {
 			String[] value = parts[i].split(" ", 2);
 			if(value.length == 2) {
-				options.put(value[0], value[1]);
+				String normalizedKey = CommandAlias.normalizeAction(value[0]);
+				options.put(normalizedKey, value[1]);
 			}
 		}
 		

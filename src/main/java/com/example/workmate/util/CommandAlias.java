@@ -82,11 +82,20 @@ public class CommandAlias {
 		return DUEDATE_ALIASES.getOrDefault(input, input);
 	}
 	
-	public static String normalizeSTATUS(String input) {
+	public static String normalizeStastus(String input) {
 		return STATUS_ALIASES.getOrDefault(input, input);
 	}
 	
-	public static String normalizePRIORITY
+	public static String normalizePriority(String input) {
+		return PRIORITY_ALIASES.getOrDefault(input, input);
+	}
 	
+	public static String normalizeCategory(String input) {
+		return CATEGORY_ALIASES.getOrDefault(input, input);
+	}
+	
+	public static String normalizeSortOption(String input) {
+		return SORT_ALIASES.getOrDefault(input, input);
+	}
 
 }
