@@ -15,6 +15,7 @@ import com.example.workmate.dto.Command;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.spec.TaskSpecifications;
+import com.example.workmate.util.CommandAlias;
 
 
 @Service
@@ -118,7 +119,7 @@ public class TaskService {
 		if(!command.getOptions().isEmpty()) {
 			Task filterTask = new Task();
 			String rowTitle = command.getOptions("title");
-			filterTask.setTitle(CommandAlias.normalizeTitle(rowTitle));
+			filterTask.setTitle(CommandAlias.normalizeField(rowTitle));
 			//filterTask.setTitle(command.getOptions("title"));
 			filterTask.setStatus(command.getOptions("status"));
 			filterTask.setPriority(command.getOptions("priority"));
