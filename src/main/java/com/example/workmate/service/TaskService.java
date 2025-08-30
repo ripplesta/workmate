@@ -119,7 +119,7 @@ public class TaskService {
 		if(!command.getOptions().isEmpty()) {
 			Task filterTask = new Task();
 			filterTask.setTitle(command.getOptions("title"));
-			String rowStatus = command.getOption("status");
+			String rowStatus = command.getOptions("status");
 			filterTask.setStatus(CommandAlias.normalizeStatus(rowStatus));
 			// filterTask.setStatus(command.getOptions("status"));
 			filterTask.setPriority(command.getOptions("priority"));
