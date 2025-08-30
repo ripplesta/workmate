@@ -95,6 +95,7 @@ public class TaskService {
 	// チャットコマンドのタスク登録処理
 	public String commandCreateAction(Command command) {
 		Task task = new Task();
+		
 		task.setTitle(command.getOptions("title"));
 		task.setDescription(command.getOptions("説明"));
 			
@@ -116,7 +117,9 @@ public class TaskService {
 	public List<Task> commandListAction(Command command) {
 		if(!command.getOptions().isEmpty()) {
 			Task filterTask = new Task();
-			filterTask.setTitle(command.getOptions("title"));
+			String rowTitle = command.getOptions("title");
+			filterTask.setTitle(CommandAlias.normalizeTitle(rowTitle));
+			//filterTask.setTitle(command.getOptions("title"));
 			filterTask.setStatus(command.getOptions("status"));
 			filterTask.setPriority(command.getOptions("priority"));
 			filterTask.setCategory(command.getOptions("category"));
