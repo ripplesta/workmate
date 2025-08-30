@@ -118,10 +118,10 @@ public class TaskService {
 	public List<Task> commandListAction(Command command) {
 		if(!command.getOptions().isEmpty()) {
 			Task filterTask = new Task();
-			String rowTitle = command.getOptions("title");
-			filterTask.setTitle(CommandAlias.normalizeField(rowTitle));
-			//filterTask.setTitle(command.getOptions("title"));
-			filterTask.setStatus(command.getOptions("status"));
+			filterTask.setTitle(command.getOptions("title"));
+			String rowStatus = command.getOption("status");
+			filterTask.setStatus(CommandAlias.normalizeStatus(rowStatus));
+			// filterTask.setStatus(command.getOptions("status"));
 			filterTask.setPriority(command.getOptions("priority"));
 			filterTask.setCategory(command.getOptions("category"));
 			
