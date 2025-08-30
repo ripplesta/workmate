@@ -19,14 +19,7 @@ public class CommandParser {
 		for(int i = 1; i < parts.length; i++) {
 			String[] value = parts[i].split(" ", 2);
 			if(value.length == 2) {
-				String normalizedKey = CommandAlias.normalizeAction(value[0]);
-				normalizedKey = CommandAlias.normalizeTitle(value[0]);
-				normalizedKey = CommandAlias.normalizeDueDate(value[0]);
-				normalizedKey = CommandAlias.normalizeStatus(value[0]);
-				normalizedKey = CommandAlias.normalizePriority(value[0]);
-				normalizedKey = CommandAlias.normalizeCategory(value[0]);
-				normalizedKey = CommandAlias.normalizeSortOption(value[0]);
-				options.put(normalizedKey, value[1]);
+				options.put(value[0], value[1]);
 			}
 		}
 		
