@@ -224,5 +224,14 @@
 			`name = "bot_response_tag",`
 			`joinColumns = @JoinColumn(name = "bot_response_id"),`
 			`inverseJoinColumns = @JoinColumn(name = "tag_id"))`で中間テーブルも用意して紐づけた
-  - Map.entry("おはよう", "挨拶")などのMapを用意しておき
-    
+
+
+## 6週目(8/25~8/31)
+### チャットボット風機能実装記録
+- 引き続き機能を追加していく
+-				
+
+  #### 学習メモ
+  - `Map.entry("おはよう", "挨拶")`などのMapを用意しておき、`if(userInput.contains(entry.getKey()))` 
+		`detectedTags.add(entry.getValue())`でメッセージにKeyが含まれていればValueをタグとして渡す
+  - 渡したタグを候補の数繰り返しで見ていき`if(tags.contains(tag.getName()))`で定型文にそのタグが含まれていれば `.add(res)`でそのタスクを加える(breakをいれると複数にならなくて済む)
