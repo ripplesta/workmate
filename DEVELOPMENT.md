@@ -195,8 +195,34 @@
   - ログイン画面や新規登録画面をcssを用いて少しだけ整えた
 
 ### チャットボット風機能実装記録
+- ページにアクセスしたときやメッセージをしたときに自動で下にスクロールされるようにした
 - チャットの返答の仕組みに機能を追加
+- ユーザーのメッセージに含まれるキーワードで複数候補がでたときに優先度によってランダムで返すのを実装
+- メッセージを時間帯によって区別して、その時間帯にあった返答をできるようにした
+- 返答の定型文にタグを付与し、メッセージに含まれるキーワードからタグにあった返答を候補に選ぶようにした
+  - タグはDBを用意し、中間テーブルもつくって定型文とタグのIDを紐づけした
+  
 
   #### 学習メモ
-  - 定型文に優先度を数字でつけて重みづけをし、特定のキーワードに複数の定型文があったときにランダムで返すようにした
-    (例　3つ候補があり10、5、5と優先度がついていると50%で1つ目の候補を返す、25%で2つ目の候補を返すなど)
+  - HTML側でJSを利用して  
+    `function scrollToBottom() {
+    	const container = document.getElementById("messages");  
+    	container.scrollTop = container.scrollHeight;  
+    }`と記述することで下にいくようにした  
+  - 定型文に優先度を数字でつけて重みづけをし、特定のキーワードに複数の定型文があったときにランダムで返すようにした  
+    (例　3つ候補があり10、5、5と優先度がついていると50%で1つ目の候補を返す、25%で2つ目の候補を返すなど)  
+  - `int totalWeight = responses.stream().mapToInt(BotResponse::getPriority).sum();`で全ての候補から優先度の値を合計し
+    `int randomValue = new Random().nextInt(totalWeight);`で合計の値からランダムに数字をだし
+    繰り返しで`current += res.getPriority()`していって`if(randomValue < current)`でcurrentがランダムに出した数字を超えたら  
+	return res.getTemplateText();で繰り返し時点の定型文を返す。なので優先度が高いほどその定型文がでやすくなる仕組み
+  - 現在の時間帯を渡し`if(now.isAfter(LocalTime.of(5, 0)) && now.isBefore(LocalTime.of(12, 0)))`としてこの条件に当てはまるなら朝
+    `if(now.isBefore(LocalTime.of(18, 0)))`この条件に当てはまるなら昼などとした
+  - リストの候補を渡し`responses.stream().filter(r -> r.getTimeRange() == TimeRange.ANY || r.getTimeRange() == currentTime).collect(Collectors.toList())`で時間帯が一致するかそれ以外(ANY)のものだけで絞り当てはまるリストを返す
+  - DBにタグ用のテーブルをつくり`@ManyToMany(mappedBy = "tags")`でSetを用意
+  - 同じくボットの返答側にも@ManyToManyを用意し
+	`@JoinTable(`
+			`name = "bot_response_tag",`
+			`joinColumns = @JoinColumn(name = "bot_response_id"),`
+			`inverseJoinColumns = @JoinColumn(name = "tag_id"))`で中間テーブルも用意して紐づけた
+  - Map.entry("おはよう", "挨拶")などのMapを用意しておき
+    
