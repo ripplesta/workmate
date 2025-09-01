@@ -204,8 +204,8 @@
   
 
   #### 学習メモ
-  - HTML側でJSを利用して
-  - `function scrollToBottom() {
+  - HTML側でJSを利用して  
+    `function scrollToBottom() {
     	const container = document.getElementById("messages");  
     	container.scrollTop = container.scrollHeight;  
     }`と記述することで下にいくようにした  
@@ -219,4 +219,10 @@
     `if(now.isBefore(LocalTime.of(18, 0)))`この条件に当てはまるなら昼などとした
   - リストの候補を渡し`responses.stream().filter(r -> r.getTimeRange() == TimeRange.ANY || r.getTimeRange() == currentTime).collect(Collectors.toList())`で時間帯が一致するかそれ以外(ANY)のものだけで絞り当てはまるリストを返す
   - DBにタグ用のテーブルをつくり`@ManyToMany(mappedBy = "tags")`でSetを用意
+  - 同じくボットの返答側にも@ManyToManyを用意し
+	`@JoinTable(`
+			`name = "bot_response_tag",`
+			`joinColumns = @JoinColumn(name = "bot_response_id"),`
+			`inverseJoinColumns = @JoinColumn(name = "tag_id"))`で中間テーブルも用意して紐づけた
+  - Map.entry("おはよう", "挨拶")などのMapを用意しておき
     
