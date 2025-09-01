@@ -19,7 +19,7 @@ public class CommandParser {
 		for(int i = 1; i < parts.length; i++) {
 			String[] value = parts[i].split(" ", 2);
 			if(value.length == 2) {
-				nomalizedKey = CommandAlias.normalizeField(value[0])
+				String nomalizedKey = CommandAlias.normalizeField(value[0]);
 				options.put(nomalizedKey, value[1]);
 			}
 		}
