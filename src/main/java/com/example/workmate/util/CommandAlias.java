@@ -76,6 +76,14 @@ public class CommandAlias {
 			Map.entry("題名", "title"),
 			Map.entry("タスク名", "title"),
 			
+			Map.entry("id", "id"),
+			Map.entry("番号", "id"),
+			Map.entry("No", "id"),
+			
+			Map.entry("description", "description"),
+			Map.entry("説明", "description"),
+			Map.entry("内容", "description"),
+			
 			Map.entry("dueDate", "dueDate"),
 			Map.entry("due", "dueDate"),
 			Map.entry("duedate", "dueDate"),
@@ -108,13 +116,15 @@ public class CommandAlias {
 			
 			);
 	
-	private static final Map<String, String> ACTION_ALIASES = Map.of(
-			"list", "list",
-			"一覧", "list",
-			"show", "list",
-			"add", "add",
-			"追加", "add",
-			"登録", "add"		
+	private static final Map<String, String> ACTION_ALIASES = Map.ofEntries(
+			Map.entry("list", "list"),
+			Map.entry("リスト", "list"),
+			Map.entry("一覧", "list"),
+			Map.entry("show", "list"),
+			
+			Map.entry("add", "add"),
+			Map.entry("追加", "add"),
+			Map.entry("登録", "add")		
 	
 			);
 	
@@ -137,6 +147,9 @@ public class CommandAlias {
 			);
 	
 	public static String normalizeKey(String key) {
+		if(key == null) {
+			return "";
+		}
 		return key.trim().toLowerCase();
 	}
 	
@@ -147,6 +160,7 @@ public class CommandAlias {
 	
 	public static String normalizeField(String input) {
 		String key = normalizeKey(input);
+		System.out.println(key);
 		return FIELD_ALIASES.getOrDefault(key, key);
 	}
 	

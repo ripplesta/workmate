@@ -54,12 +54,12 @@ public class TaskService {
 		
 	}
 	// タスクの編集
-	public void updateTask(Task task) {
+	public void saveTask(Task task) {
 		Account loginUser = getLoginUser();
-		//　編集するときタスクがログインユーザーのタスクかどうかチェック
 		Task updateTask = taskRepository.findById(task.getId())
 			.orElseThrow(() -> new IllegalArgumentException("タスクが見つかりませんでした"));
 		
+		//　編集するときタスクがログインユーザーのタスクかどうかチェック
 		// 違うなら編集させないようにする
 		if(!updateTask.getUser().equals(loginUser)) {
 			throw new SecurityException("他人のタスクは編集できません");
@@ -98,17 +98,17 @@ public class TaskService {
 		Task task = new Task();
 		
 		task.setTitle(command.getOptions("title"));
-		task.setDescription(command.getOptions("説明"));
+		task.setDescription(command.getOptions("description"));
 			
-		String strDue = command.getOptions("期限");
+		String strDue = command.getOptions("dueDate");
 			//LocalDate型なので型変換が必要
 			if(strDue != null) {
 			LocalDate dueDate = LocalDate.parse(strDue);
 			task.setDueDate(dueDate);
 		}
-		task.setStatus(command.getOptions("進捗"));
-		task.setPriority(command.getOptions("優先度"));
-		task.setCategory(command.getOptions("カテゴリ"));
+		task.setStatus(command.getOptions("status"));
+		task.setPriority(command.getOptions("priority"));
+		task.setCategory(command.getOptions("category"));
 			
 		createTask(task);
 		return "タスク登録が完了しました";
@@ -161,6 +161,26 @@ public class TaskService {
 		
 		return sb.toString();
 		
-	}	
+	}
+	
+	public String commandUpdateAction(Command command) {
+		Task newTaskData = new Task();
+		Long num = Long.parseLong(command.getOptions("id"));
+		newTaskData.setId(num);
+		newTaskData.setTitle(command.getOptions("title"));
+		newTaskData.setDescription(command.getOptions("description"));
+		String strDue = command.getOptions("dueDate");
+			//LocalDate型なので型変換が必要
+			if(strDue != null) {
+				LocalDate dueDate = LocalDate.parse(strDue);
+				newTaskData.setDueDate(dueDate);
+			}
+		newTaskData.setStatus(command.getOptions("status"));
+		newTaskData.setPriority(command.getOptions("priority"));
+		newTaskData.setCategory(command.getOptions("category"));
+		saveTask(newTaskData);
+		
+		return "タスクが更新できました";
+	}
 	
 }

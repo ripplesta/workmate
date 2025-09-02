@@ -2,6 +2,7 @@ package com.example.workmate.domain;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,6 +26,7 @@ public class ChatMessage {
 	
 	@Enumerated(EnumType.STRING)
 	private SenderType senderType;
+	@Column(length = 1000)
 	private String messageText;
 	private LocalDateTime createdAt;
 	

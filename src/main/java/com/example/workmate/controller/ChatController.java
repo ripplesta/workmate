@@ -19,6 +19,7 @@ import com.example.workmate.repository.ChatMessageRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.service.ChatBotService;
 import com.example.workmate.service.TaskService;
+import com.example.workmate.util.CommandAlias;
 import com.example.workmate.util.CommandParser;
 
 @Controller
@@ -43,6 +44,7 @@ public class ChatController {
 		List<ChatMessage> message = chatMessageRepository.findByUserOrderByCreatedAtAsc(loginUser);
 		
 		for(ChatMessage msg : message) {
+			// メッセージに改行したいというのを認識させる
 			msg.setMessageText(msg.getMessageText().replace("\n", "<br>"));
 		}
 		model.addAttribute("message", message);
@@ -54,8 +56,9 @@ public class ChatController {
 		Account loginUser = userDetails.getAccount();
 		CommandParser parser =  new CommandParser();
 		Command command = parser.parse(message);
+		String action = CommandAlias.normalizeAction(command.getAction());
 		
-		if(command.getAction().equals("list")) {
+		if(action.equals("list")) {
 			List<Task> tasks = taskService.commandListAction(command);
 			String response = taskService.formatResponse(tasks);
 			if(response.isEmpty()) {
@@ -63,8 +66,12 @@ public class ChatController {
 			}
 			chatBotService.handleUserMessage(loginUser, message, response);
 		}
-		else if(command.getAction().equals("add")) {
+		else if(action.equals("add")) {
 			String response = taskService.commandCreateAction(command);
+			chatBotService.handleUserMessage(loginUser, message, response);
+		}
+		else if(action.equals("update")) {
+			String response = taskService.commandUpdateAction(command);
 			chatBotService.handleUserMessage(loginUser, message, response);
 		}
 		
