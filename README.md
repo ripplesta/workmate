@@ -111,4 +111,7 @@
 - 対処：@Queryに記述したものを修正
 - エラー：`NoResourceFoundException`
 - 原因：パスにHTMLファイルがみつからなかった
+- エラー：`unexpected error`
+- 原因：リストの表示がcharacter varying(255)を超えてしまった
+- 対処：大きさを1000に変更
 
