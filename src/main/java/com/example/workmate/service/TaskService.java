@@ -59,13 +59,26 @@ public class TaskService {
 		Task updateTask = taskRepository.findById(task.getId())
 			.orElseThrow(() -> new IllegalArgumentException("タスクが見つかりませんでした"));
 		
+		System.out.println("DEBUG loginUser id=" + loginUser.getUserId());
+		System.out.println("DEBUG updateTask user id=" + updateTask.getUser().getUserId());
+		System.out.println("DEBUG loginUser equals updateTask.getUser()? " + loginUser.equals(updateTask.getUser()));
+		
 		//　編集するときタスクがログインユーザーのタスクかどうかチェック
 		// 違うなら編集させないようにする
-		if(!updateTask.getUser().equals(loginUser)) {
+		if(!updateTask.getUser().getUserId().equals(loginUser.getUserId())) {
 			throw new SecurityException("他人のタスクは編集できません");
 		}
-		task.setUser(loginUser);
-		taskRepository.save(task);
+		// 渡されたデータでそれぞれ上書き
+		if(task.getTitle() != null) updateTask.setTitle(task.getTitle());
+		if(task.getDescription() != null) updateTask.setDescription(task.getDescription());
+		if(task.getDueDate() != null) updateTask.setDueDate(task.getDueDate());
+		if(task.getStatus() != null) updateTask.setStatus(task.getStatus());
+		if(task.getPriority() != null) updateTask.setPriority(task.getPriority());
+		if(task.getCategory() != null) updateTask.setCategory(task.getCategory());
+		
+		
+		updateTask.setUser(loginUser);
+		taskRepository.save(updateTask);
 	}
 	
 	// タスクの削除
