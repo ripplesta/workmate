@@ -196,5 +196,8 @@ public class TaskService {
 		
 		return "タスクが更新できました";
 	}
-	
+
+	public String commandDoneAction(Command command) {
+		command.getOptions().put("status", "完了");
+		return commandUpdateAction(command);
 }
