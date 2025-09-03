@@ -59,6 +59,7 @@ public class TaskService {
 		Task updateTask = taskRepository.findById(task.getId())
 			.orElseThrow(() -> new IllegalArgumentException("タスクが見つかりませんでした"));
 		
+		// 確認用
 		System.out.println("DEBUG loginUser id=" + loginUser.getUserId());
 		System.out.println("DEBUG updateTask user id=" + updateTask.getUser().getUserId());
 		System.out.println("DEBUG loginUser equals updateTask.getUser()? " + loginUser.equals(updateTask.getUser()));
