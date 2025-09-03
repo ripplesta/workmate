@@ -124,7 +124,20 @@ public class CommandAlias {
 			
 			Map.entry("add", "add"),
 			Map.entry("追加", "add"),
-			Map.entry("登録", "add")		
+			Map.entry("登録", "add"),
+			
+			Map.entry("update", "update"),
+			Map.entry("更新", "update"),
+			Map.entry("上書き", "update"),
+			Map.entry("save", "update"),
+			Map.entry("保存", "update"),
+
+			Map.entry("done", "done"),
+			Map.entry("完了", "done"),
+			Map.entry("doing", "doing"),
+			Map.entry("進行中", "doing"),
+			Map.entry("todo", "todo"),
+			Map.entry("未着手", "todo")
 	
 			);
 	
