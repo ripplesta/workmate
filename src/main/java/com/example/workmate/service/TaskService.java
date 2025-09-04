@@ -200,4 +200,13 @@ public class TaskService {
 	public String commandDoneAction(Command command) {
 		command.getOptions().put("status", "完了");
 		return commandUpdateAction(command);
-}
+	}
+
+	public String commandDoingAction(Command command) {
+		command.getOptions().put("status", "進行中");
+		return commandUpdateAction(command);
+	}
+
+	public String commandTodoAction(Command command) {
+		command.getOptions().put("status", "未着手");
+		return commandUpdateAction(command);
