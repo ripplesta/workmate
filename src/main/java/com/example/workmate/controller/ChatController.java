@@ -74,6 +74,19 @@ public class ChatController {
 			String response = taskService.commandUpdateAction(command);
 			chatBotService.handleUserMessage(loginUser, message, response);
 		}
+		else if(action.equals("done")) {
+			String response = taskService.commandDoneAction(command);
+			chatBotService.handleUserMessage(loginUser, message, reaponse);
+		}
+		else if(action.equals("doing")) {
+			String response = taskService.commandDoingAction(command);
+			chatBotService.handleUserMessage(loginUser, message, response);
+		}
+
+		else if(action.equals("todo")) {
+			String response = taskService.commandTodoAction(command);
+			chatBotService.handleUserMessage(loginUser, message, response);
+		}
 		
 		else {
 			chatBotService.handleUserMessage(loginUser, message);
