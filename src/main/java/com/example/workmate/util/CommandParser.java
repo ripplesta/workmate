@@ -19,8 +19,12 @@ public class CommandParser {
 		for(int i = 1; i < parts.length; i++) {
 			String[] value = parts[i].split(" ", 2);
 			if(value.length == 2 && value[0] != null &&!value[0].isBlank()) {
-				String nomalizedKey = CommandAlias.normalizeField(value[0]);
-				options.put(nomalizedKey, value[1]);
+				String nomalizedKey = CommandAlias.normalizeField(value[0].trim());
+				options.put(nomalizedKey, value[1].trim());
+			}
+			else if(value.length != 2 && value[0] != null &&!value[0].isBlank()) {
+				String nomalizedAction = CommandAlias.normalizeAction(value[0].trim());
+				options.put("arg", nomalizedAction);
 			}
 			// 確認用
 			System.out.println("DEBUG parts[" + i + "] = " + parts[i]);

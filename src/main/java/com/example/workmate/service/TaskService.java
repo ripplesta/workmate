@@ -210,3 +210,65 @@ public class TaskService {
 	public String commandTodoAction(Command command) {
 		command.getOptions().put("status", "未着手");
 		return commandUpdateAction(command);
+	}
+	
+	public String commandHelpAction(Command command) {
+		String target = command.getOptions().get("arg");
+		System.out.println("DEBUG target = '" + target + "'"); // ★ここ追加
+
+	    if (target == null) {
+	        return "...";
+	    }
+
+	    target = target.trim().toLowerCase();
+		
+		if(target == null) {
+			// 全体ヘルプ
+			return"""
+				利用可能なコマンド一覧：
+				/add /登録 など タスクを追加
+				/list /リスト リストの一覧を表示
+				/update /更新 タスクを更新
+				/done /完了, /doing /進行中, /todo /未完了, +id番号 それぞれ直接進捗を更新 
+				/help +コマンド名 そのコマンドの詳細表示
+				英語表記、日本語表記対応
+				空白は半角スペースでお願いします
+				""";
+		}
+		// コマンド別の詳細表示
+		switch(target) {
+		case"add":
+			return"""
+				/add /タイトル <タスク名> /内容 <内容> 
+				/期限 <YYYY-MM-DD> /進捗 <未着手or進行中or完了> 
+				/優先度 <高or中or低> /カテゴリ <仕事, 生活など>
+				空白は半角スペース <>は必要なし
+				全て書かなくても可
+					""";
+		case"list":
+			return"""
+				/list 全てのリストを表示
+				/list /タイトル <ワード> ワードで絞り込み検索ができます
+				絞り込みやソートが自由に組み合わせ可能
+				例： /list /タイトル <タスク名> /期限 <YYYY-MM-DD> 
+				/進捗 <進行中> /優先度 <高> /カテゴリ <仕事> /ソート <期限or登録> /順番 <昇順>
+				空白は半角スペース <>は必要なし
+					""";
+		case"update":
+			return"""
+				/update /id <番号> /変更したい部分 <更新内容> 
+				→指定されたタスクを入力された内容で更新します
+				例： /update /番号 1 /タイトル <タスク名> /優先度 中 /カテゴリ 生活 など
+				複数更新も可
+				空白は半角スペース <>は必要なし
+					""";
+			default:
+				return "指定されたコマンドのヘルプは存在しません：" + target;
+		}
+		
+		
+	}
+	
+}
+
+
