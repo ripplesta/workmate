@@ -216,11 +216,7 @@ public class TaskService {
 		String target = command.getOptions().get("arg");
 		System.out.println("DEBUG target = '" + target + "'"); // ★ここ追加
 
-	    if (target == null) {
-	        return "...";
-	    }
-
-	    target = target.trim().toLowerCase();
+	    //target = target.trim().toLowerCase();
 		
 		if(target == null) {
 			// 全体ヘルプ
@@ -229,8 +225,10 @@ public class TaskService {
 				/add /登録 など タスクを追加
 				/list /リスト リストの一覧を表示
 				/update /更新 タスクを更新
-				/done /完了, /doing /進行中, /todo /未完了, +id番号 それぞれ直接進捗を更新 
-				/help +コマンド名 そのコマンドの詳細表示
+				/done, /完了 /番号 <番号>
+				/doing, /進行中 /番号 <id番号>
+				/todo, /未完了 /番号 <id番号>  
+				/help /<コマンド名> そのコマンドの詳細表示
 				英語表記、日本語表記対応
 				空白は半角スペースでお願いします
 				""";
