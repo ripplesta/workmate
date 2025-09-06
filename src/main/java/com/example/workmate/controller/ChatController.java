@@ -91,6 +91,10 @@ public class ChatController {
 			String response = taskService.commandHelpAction(command);
 			chatBotService.handleUserMessage(loginUser, message, response);
 		}
+		else if(action.equals("stats")) {
+			String response = taskService.commandStatsAction(command);
+			chatBotService.handleUserMessage(loginUser, message, response);
+		}
 		
 		else {
 			chatBotService.handleUserMessage(loginUser, message);

@@ -263,22 +263,23 @@ public class TaskService {
 			default:
 				return "指定されたコマンドのヘルプは存在しません：" + target;
 		}
+	}
 
 	public String commandStatsAction(Command command) {
 		Account loginUser = getLoginUser();
-		List<Task> task = taskRepository.findByUser(loginUser);
+		List<Task> tasks = taskRepository.findByUser(loginUser);
 		
-		Long statusTodo = 0;
-		Long statusDoing = 0;
-		Long statusDone = 0;
-		for(int i = 0; i < task.length; i++) {
-			if(task.getStatus()equals("未着手") {
+		int statusTodo = 0;
+		int statusDoing = 0;
+		int statusDone = 0;
+		for(Task task : tasks) {
+			if(task.getStatus().equals("未着手")) {
 				statusTodo++;
 			}
-			else if(task.getStatus().equals("進行中") {
+			else if(task.getStatus().equals("進行中")) {
 				statusDoing++;
 			}
-			else if(task.getStatus().equals("完了") {
+			else if(task.getStatus().equals("完了")) {
 				statusDone++;
 			}
 		}
@@ -288,7 +289,9 @@ public class TaskService {
 			未着手:%d件
 			進行中:%d件
 			完了:%d件
-			""", statusTodo, statusDoing, statusDone)
+			""", statusTodo, statusDoing, statusDone));
+		
+		return sb.toString();
 	}
 	
 }
