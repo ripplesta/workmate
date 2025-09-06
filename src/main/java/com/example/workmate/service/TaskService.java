@@ -1,7 +1,9 @@
 package com.example.workmate.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
@@ -290,6 +292,32 @@ public class TaskService {
 			進行中:%d件
 			完了:%d件
 			""", statusTodo, statusDoing, statusDone));
+		
+		// カテゴリ別集計
+		Map<String, Map<String, Integer>> categoryStats = new HashMap<>();
+		for(Task task : tasks) {
+			String category = (task.getCategory() != null) ? task.getCategory() : "未分類";
+			String status = (task.getStatus() != null) ? task.getStatus() : "未分類";
+			
+			Map<String, Integer> statusCount = categoryStats.get(category);
+			if(statusCount == null) {
+				new HashMap<>();
+				categoryStats.put(category, statusCount);
+			}
+			statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
+		}
+		sb.append("[カテゴリ別]\n");
+		for(var result : categoryStats.entrySet()) {
+			String category = result.getKey();
+			Map<String, Integer> statusResult = result.getValue();
+			
+			sb.append(String.format("%s: 未着手 %d, 進行中 %d, 完了 %d\n",
+					category,
+					statusResult.getOrDefault("未着手", 0),
+					statusResult.getOrDefault("進行中", 0),
+					statusResult.getOrDefault("完了", 0)
+					));
+		}
 		
 		return sb.toString();
 	}
