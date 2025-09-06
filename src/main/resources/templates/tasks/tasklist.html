@@ -7,6 +7,7 @@
     <h1>タスク一覧</h1>
     <form th:action="@{/tasks/search}" method="get">
         タイトル：<input type="text" name="title" th:value="${title}" placeholder="キーワードを入力">
+        期限日：<input type="text" name="dueDate" th:value="${dueDate}" placeholder="例：yyyy-MM-dd">
         進捗状況：
         <select name="status">
             <option value="">--選択--</option>

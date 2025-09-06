@@ -1,5 +1,8 @@
 package com.example.workmate.spec;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
+
 import org.springframework.data.jpa.domain.Specification;
 
 import com.example.workmate.domain.Task;
@@ -17,7 +20,21 @@ public class TaskSpecifications {
 		return (root, query, cb) ->
 			(title == null || title.isEmpty()) ? null :
 			cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase() + "%");
-			
+	}
+	
+	public static Specification<Task> dueDateEquals(LocalDate date) {
+		return (root, query, cb) ->
+			(date == null) ? null :
+			cb.equal(root.get("dueDate"), date);
+	}
+	
+	public static Specification<Task> dueMonthEquals(YearMonth ym){
+		return (root, query, cb) ->{
+			if(ym == null) return null;
+			LocalDate start = ym.atDay(1);
+			LocalDate end = ym.atEndOfMonth();
+			return cb.between(root.get("dueDate"), start, end);
+		};
 	}
 	
 	public static Specification<Task> statusEquals(String status) {

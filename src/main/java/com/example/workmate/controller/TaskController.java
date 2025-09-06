@@ -1,5 +1,7 @@
 package com.example.workmate.controller;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.Task;
 import com.example.workmate.dto.TaskForm;
+import com.example.workmate.dto.TaskSearchForm;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.service.TaskService;
@@ -114,38 +117,40 @@ public class TaskController {
 	// 検索やソートの組み合わせを実行
 	@GetMapping("/search")
 	public String searchTasks(@RequestParam(required = false) String title,
+							  @RequestParam(required = false) String dueDate,
 							  @RequestParam(required = false) String status,
 							  @RequestParam(required = false) String category,
 							  @RequestParam(required = false) String priority,
 							  @RequestParam(defaultValue = "dueDate") String sortBy,
 							  @RequestParam(defaultValue = "asc") String order,
 							  Model model) {
-		
-//		Account loginUser = userDetails.getAccount();
-//		
-//		// Specification組み合わせ
-//		Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
-//												.and(TaskSpecifications.titleContains(title))
-//												.and(TaskSpecifications.statusEquals(status))
-//				                                .and(TaskSpecifications.categoryEquals(category))
-//				                                .and(TaskSpecifications.priorityEquals(priority));
-//		
-//		// ソートの設定
-//		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-//		
-//		// 実行して格納
-//		List<Task> tasks = taskRepository.findAll(spec, sort);
-		
+				
+
 		// 情報をサービスに渡すために格納
-		Task info = new Task();
+		TaskSearchForm info = new TaskSearchForm();
 		info.setTitle(title);
 		info.setStatus(status);
 		info.setCategory(category);
 		info.setPriority(priority);
+		
+		// 期限日検索の形によって分岐
+		if(dueDate != null && !dueDate.isEmpty()) {
+			// 指定日
+			if(dueDate.matches("\\d{4}-\\d{2}-\\d{2}")) {
+				LocalDate date = LocalDate.parse(dueDate);
+				info.setDueDate(date);
+			}
+			// 月指定
+			else if(dueDate.matches("\\d{4}-\\d{2}")) {
+				YearMonth ym = YearMonth.parse(dueDate);
+				info.setYearMonth(ym);
+			}
+		}
 		List<Task> filterTasks = taskService.searchAndSortTasks(info, sortBy, order);
 		
 		model.addAttribute("tasks", filterTasks);
 		model.addAttribute("title", title);
+		model.addAttribute("dueDate", dueDate);
 		model.addAttribute("status", status);
 		model.addAttribute("category", category);
 		model.addAttribute("priority", priority);

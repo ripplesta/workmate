@@ -1,6 +1,7 @@
 package com.example.workmate.service;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.workmate.domain.Account;
 import com.example.workmate.domain.Task;
 import com.example.workmate.dto.Command;
+import com.example.workmate.dto.TaskSearchForm;
 import com.example.workmate.repository.TaskRepository;
 import com.example.workmate.security.AccountUserDetails;
 import com.example.workmate.spec.TaskSpecifications;
@@ -91,15 +93,25 @@ public class TaskService {
 	}
 	
 	// ソート＋検索
-	public List<Task> searchAndSortTasks(Task task, String sortBy, String order) {
+	public List<Task> searchAndSortTasks(TaskSearchForm form, String sortBy, String order) {
 		Account loginUser = getLoginUser();
 		
 		// 送られてきたデータでSpecification組み合わせ
-		Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
-												.and(TaskSpecifications.titleContains(task.getTitle()))
-												.and(TaskSpecifications.statusEquals(task.getStatus()))
-												.and(TaskSpecifications.categoryEquals(task.getCategory()))
-												.and(TaskSpecifications.priorityEquals(task.getPriority()));
+//		Specification<Task> spec = Specification.where(TaskSpecifications.userIdEquals(loginUser.getUserId()))
+//												.and(TaskSpecifications.titleContains(task.getTitle()))
+//												.and(TaskSpecifications.dueDateEquals(task.getDueDate()))
+//												.and(TaskSpecifications.statusEquals(task.getStatus()))
+//												.and(TaskSpecifications.categoryEquals(task.getCategory()))
+//												.and(TaskSpecifications.priorityEquals(task.getPriority()));
+		
+		Specification<Task> spec = Specification.allOf();
+		spec = spec.and(TaskSpecifications.userIdEquals(loginUser.getUserId()));
+		spec = spec.and(TaskSpecifications.titleContains(form.getTitle()));
+		spec = spec.and(TaskSpecifications.dueDateEquals(form.getDueDate()));
+		spec = spec.and(TaskSpecifications.dueMonthEquals(form.getYearMonth()));
+		spec = spec.and(TaskSpecifications.statusEquals(form.getStatus()));
+		spec = spec.and(TaskSpecifications.categoryEquals(form.getCategory()));
+		spec = spec.and(TaskSpecifications.priorityEquals(form.getPriority()));
 		// ソートの設定
 		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 		
@@ -133,8 +145,22 @@ public class TaskService {
 
 	public List<Task> commandListAction(Command command) {
 		if(!command.getOptions().isEmpty()) {
-			Task filterTask = new Task();
+			TaskSearchForm filterTask = new TaskSearchForm();
 			filterTask.setTitle(command.getOptions("title"));
+			String strDue = command.getOptions("dueDate");
+			
+			if(strDue != null && !strDue.isEmpty()) {
+				// 指定日
+				if(strDue.matches("\\d{4}-\\d{2}-\\d{2}")) {
+					LocalDate date = LocalDate.parse(strDue);
+					filterTask.setDueDate(date);
+				}
+				// 月指定
+				else if(strDue.matches("\\d{4}-\\d{2}")) {
+					YearMonth ym = YearMonth.parse(strDue);
+					filterTask.setYearMonth(ym);
+				}
+			}
 			String rowStatus = command.getOptions("status");
 			filterTask.setStatus(CommandAlias.normalizeStatus(rowStatus));
 			// filterTask.setStatus(command.getOptions("status"));
@@ -187,10 +213,10 @@ public class TaskService {
 		newTaskData.setDescription(command.getOptions("description"));
 		String strDue = command.getOptions("dueDate");
 			//LocalDate型なので型変換が必要
-			if(strDue != null) {
-				LocalDate dueDate = LocalDate.parse(strDue);
-				newTaskData.setDueDate(dueDate);
-			}
+		if(strDue != null) {
+			LocalDate dueDate = LocalDate.parse(strDue);
+			newTaskData.setDueDate(dueDate);
+		}
 		newTaskData.setStatus(command.getOptions("status"));
 		newTaskData.setPriority(command.getOptions("priority"));
 		newTaskData.setCategory(command.getOptions("category"));
