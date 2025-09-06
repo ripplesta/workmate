@@ -269,8 +269,9 @@ public class TaskService {
 
 	public String commandStatsAction(Command command) {
 		Account loginUser = getLoginUser();
-		List<Task> tasks = taskRepository.findByUser(loginUser);
 		
+		List<Task> tasks = taskRepository.findByUser(loginUser);
+		// 全体の進捗集計
 		int statusTodo = 0;
 		int statusDoing = 0;
 		int statusDone = 0;
@@ -295,24 +296,27 @@ public class TaskService {
 		
 		// カテゴリ別集計
 		Map<String, Map<String, Integer>> categoryStats = new HashMap<>();
+		Map<String, Integer> categoryCounts = new HashMap<>();
 		for(Task task : tasks) {
 			String category = (task.getCategory() != null) ? task.getCategory() : "未分類";
-			String status = (task.getStatus() != null) ? task.getStatus() : "未分類";
+			String status = (task.getStatus() != null) ? task.getStatus() : "未着手";
 			
-			Map<String, Integer> statusCount = categoryStats.get(category);
-			if(statusCount == null) {
-				new HashMap<>();
-				categoryStats.put(category, statusCount);
+			Map<String, Integer> statusCounts = categoryStats.get(category);
+			if(statusCounts == null) {
+				statusCounts = new HashMap<>();
+				categoryStats.put(category, statusCounts);
 			}
-			statusCount.put(status, statusCount.getOrDefault(status, 0) + 1);
+			statusCounts.put(status, statusCounts.getOrDefault(status, 0) + 1);
+			categoryCounts.put(category, categoryCounts.getOrDefault(category, 0) + 1);
 		}
+		List<String> categoryOrder = List.of("仕事", "趣味", "勉強", "生活", "その他");
 		sb.append("[カテゴリ別]\n");
-		for(var result : categoryStats.entrySet()) {
-			String category = result.getKey();
-			Map<String, Integer> statusResult = result.getValue();
+		for(String category : categoryOrder) {
+			Map<String, Integer> statusResult = categoryStats.getOrDefault(category, new HashMap<>());
 			
-			sb.append(String.format("%s: 未着手 %d, 進行中 %d, 完了 %d\n",
+			sb.append(String.format("%s: %d件(未着手 %d, 進行中 %d, 完了 %d)\n",
 					category,
+					categoryCounts.get(category),
 					statusResult.getOrDefault("未着手", 0),
 					statusResult.getOrDefault("進行中", 0),
 					statusResult.getOrDefault("完了", 0)
