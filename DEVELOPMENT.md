@@ -152,7 +152,13 @@
 - 上記の機能を複合して使うことも可能
 
   #### 学習メモ
+  - `Specification`は`JPA Criteria API`を裏で使っていて、ラムダの引数`(root, query, cb)`の cbがそれにあたる
+  - (root, query, cb) ->  
+    - root:エンティティのメタ情報(Taskのカラムにアクセスする)  
+    - query:実行中のクエリ全体(select句とかorder byとか)  
+    - cb:CriteriaBuilder(where句に必要な条件を組み立てる道具箱)  
   - `JpaSpecificationExecutor`をリポジトリに追加すると柔軟な動的検索ができる
+  - CriteriaBuilderが持っている標準メソッドが色々あり便利
   - 検索条件を組み立てるためのクラスTaskSpecificationsを作成し、  
     `public static Specification<Task> titleContains(String title) {
         return (root, query, cb) ->  
