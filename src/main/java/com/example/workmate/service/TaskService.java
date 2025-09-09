@@ -242,7 +242,9 @@ public class TaskService {
 	
 	public String commandHelpAction(Command command) {
 		String target = command.getOptions().get("arg");
-		System.out.println("DEBUG target = '" + target + "'"); // ★ここ追加
+		
+		//確認用
+		System.out.println("DEBUG target = '" + target + "'"); 
 
 	    //target = target.trim().toLowerCase();
 		
@@ -257,6 +259,7 @@ public class TaskService {
 				/doing, /進行中 /番号 <id番号>
 				/todo, /未完了 /番号 <id番号>  
 				/help /<コマンド名> そのコマンドの詳細表示
+				/stats 全体の進捗を確認
 				英語表記、日本語表記対応
 				空白は半角スペースでお願いします
 				""";
@@ -322,7 +325,6 @@ public class TaskService {
 		
 		// カテゴリ別集計
 		Map<String, Map<String, Integer>> categoryStats = new HashMap<>();
-		Map<String, Integer> categoryCounts = new HashMap<>();
 		for(Task task : tasks) {
 			String category = (task.getCategory() != null) ? task.getCategory() : "未分類";
 			String status = (task.getStatus() != null) ? task.getStatus() : "未着手";
@@ -333,16 +335,19 @@ public class TaskService {
 				categoryStats.put(category, statusCounts);
 			}
 			statusCounts.put(status, statusCounts.getOrDefault(status, 0) + 1);
-			categoryCounts.put(category, categoryCounts.getOrDefault(category, 0) + 1);
 		}
 		List<String> categoryOrder = List.of("仕事", "趣味", "勉強", "生活", "その他");
 		sb.append("[カテゴリ別]\n");
 		for(String category : categoryOrder) {
 			Map<String, Integer> statusResult = categoryStats.getOrDefault(category, new HashMap<>());
-			
+			int total = 0;
+		    for(int value : statusResult.values()) {
+		    	total += value;
+		    }
+		    
 			sb.append(String.format("%s: %d件(未着手 %d, 進行中 %d, 完了 %d)\n",
 					category,
-					categoryCounts.get(category),
+					total,
 					statusResult.getOrDefault("未着手", 0),
 					statusResult.getOrDefault("進行中", 0),
 					statusResult.getOrDefault("完了", 0)

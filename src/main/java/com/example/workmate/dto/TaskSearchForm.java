@@ -7,6 +7,8 @@ public class TaskSearchForm {
 	private String title;
 	private LocalDate dueDate;
 	private YearMonth yearMonth;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	private String status;
 	private String priority;
 	private String category;
@@ -35,6 +37,22 @@ public class TaskSearchForm {
 		this.yearMonth = yearMonth;
 	}
 	
+	public LocalDate getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
+
+	public LocalDate getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
+	}
+
 	public String getStatus() {
 		return status;
 	}

@@ -54,5 +54,20 @@ public class TaskSpecifications {
 		(priority == null || priority.isEmpty()) ? null :
 		cb.equal(root.get("priority"), priority);
 	}
+	
+	public static Specification<Task> dueDateBetween(LocalDate start, LocalDate end) {
+		return (root, query, cb) -> {
+			if(start == null && end == null) return null;
+			if(start != null && end != null) {
+				return cb.between(root.get("dueDate"), start, end);
+			}
+			else if(start != null) {
+				return cb.greaterThanOrEqualTo(root.get("dueDate"), start);
+			}
+			else {
+				return cb.lessThanOrEqualTo(root.get("dueDate"), end);
+			}
+		};
+	}
 
 }
