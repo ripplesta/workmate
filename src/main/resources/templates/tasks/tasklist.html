@@ -20,6 +20,12 @@
         </div>
 
         <script>
+            function formatLocalDate(date) {
+                let y = date.getFullYear();
+                let m = String(date.getMonth() + 1).padStart(2, '0');
+                let d = String(date.getDate()).padStart(2, '0');
+                return '${y}-${m}-${d}';
+            }
             function setRenge(type){
                 const start = document.querySelector('input[name="startDate"]');
                 const end = document.querySelector('input[name="endDate"]');
@@ -33,12 +39,12 @@
                     start.value = today.toISOString().split('T')[0];
                     let weekLater = new Date(today);
                     weekLater.setDate(today.getDate() + 7);
-                    end.value = weekLater.toISOString().split('T')[0];
+                    end.value = formatLocalDate(weekLater);
                 }
                 else if(type === 'month') {
                     start.value = today.toISOString().split('T')[0];
                     let endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                    end.value = endOfMonth.toISOString().split('T')[0];
+                    end.value = formatLocalDate(endOfMonth);
                 }
             }
         </script>
