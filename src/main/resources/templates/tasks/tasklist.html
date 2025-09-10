@@ -6,44 +6,80 @@
 <body>
     <h1>タスク一覧</h1>
     <form th:action="@{/tasks/search}" method="get">
-        タイトル：<input type="text" name="title" th:value="${title}" placeholder="キーワードを入力">
-        期限日：<input type="text" name="dueDate" th:value="${dueDate}" placeholder="yyyy-MM-dd or yyyy-MM">
-        開始日:<input type="date" name="startDate" th:value="${startDate}">
-        終了日:<input type="date" name="endDate" th:value="${endDate}">
-        進捗状況：
-        <select name="status">
-            <option value="">--選択--</option>
-            <option value="未着手" th:selected="${status=='未着手'}">未着手</option>
-            <option value="進行中" th:selected="${status=='進行中'}">進行中</option>
-            <option value="完了" th:selected="${status=='完了'}">完了</option>
-        </select>
-        優先度：
-        <select name="priority">
-            <option value="">--選択--</option>
-            <option value="高" th:selected="${priority=='高'}">高</option>
-            <option value="中" th:selected="${priority=='中'}">中</option>
-            <option value="低" th:selected="${priority=='低'}">低</option>
-        </select>
-        カテゴリ：
-        <select name="category">
-            <option value="">--選択--</option>
-            <option value="仕事" th:selected="${category=='仕事'}">仕事</option>
-            <option value="趣味" th:selected="${category=='趣味'}">趣味</option>
-            <option value="勉強" th:selected="${category=='勉強'}">勉強</option>
-            <option value="生活" th:selected="${category=='生活'}">生活</option>
-            <option value="その他" th:selected="${category=='その他'}">その他</option>
-        </select>
-        ソート：
-        <select name="sortBy">
-            <option value="dueDate" th:selected="${sortBy=='dueDate'}">期限日</option>
-            <option value="createdAt" th:selected="${sortBy=='createdAt'}">作成日</option>
-        </select>
-        <select name="order">
-            <option value="asc" th:selected="${order=='asc'}">昇順</option>
-            <option value="desc" th:selected="${order=='desc'}">降順</option>
-        </select>
-        <button type="submit" >検索</button>
-        <a th:href="@{/tasks/refresh}">元に戻す</a>
+        <div>
+            タイトル：<input type="text" name="title" th:value="${title}" placeholder="キーワードを入力">
+            期限日：<input type="text" name="dueDate" th:value="${dueDate}" placeholder="yyyy-MM-dd or yyyy-MM">
+        </div>
+        <div>
+            期限範囲指定：
+            <button type="button" onclick="setRenge('today')">今日まで</button>
+            <button type="button" onclick="setRenge('week')">1週間以内</button>
+            <button type="button" onclick="setRenge('month')">今月</button>
+            開始日:<input type="date" name="startDate" th:value="${startDate}">
+            終了日:<input type="date" name="endDate" th:value="${endDate}">
+        </div>
+
+        <script>
+            function setRenge(type){
+                const start = document.querySelector('input[name="startDate"]');
+                const end = document.querySelector('input[name="endDate"]');
+                const today = new Date();
+
+                if(type === 'today') {
+                    start.value = today.toISOString().split('T')[0];
+                    end.value = today.toISOString().split('T')[0];
+                } 
+                else if(type === 'week') {
+                    start.value = today.toISOString().split('T')[0];
+                    let weekLater = new Date(today);
+                    weekLater.setDate(today.getDate() + 7);
+                    end.value = weekLater.toISOString().split('T')[0];
+                }
+                else if(type === 'month') {
+                    start.value = today.toISOString().split('T')[0];
+                    let endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                    end.value = endOfMonth.toISOString().split('T')[0];
+                }
+            }
+        </script>
+        <div>
+            進捗状況：
+            <select name="status">
+                <option value="">--選択--</option>
+                <option value="未着手" th:selected="${status=='未着手'}">未着手</option>
+                <option value="進行中" th:selected="${status=='進行中'}">進行中</option>
+                <option value="完了" th:selected="${status=='完了'}">完了</option>
+            </select>
+            優先度：
+            <select name="priority">
+                <option value="">--選択--</option>
+                <option value="高" th:selected="${priority=='高'}">高</option>
+                <option value="中" th:selected="${priority=='中'}">中</option>
+                <option value="低" th:selected="${priority=='低'}">低</option>
+            </select>
+            カテゴリ：
+            <select name="category">
+                <option value="">--選択--</option>
+                <option value="仕事" th:selected="${category=='仕事'}">仕事</option>
+                <option value="趣味" th:selected="${category=='趣味'}">趣味</option>
+                <option value="勉強" th:selected="${category=='勉強'}">勉強</option>
+                <option value="生活" th:selected="${category=='生活'}">生活</option>
+                <option value="その他" th:selected="${category=='その他'}">その他</option>
+            </select>
+        </div>
+        <div>
+            ソート：
+            <select name="sortBy">
+                <option value="dueDate" th:selected="${sortBy=='dueDate'}">期限日</option>
+                <option value="createdAt" th:selected="${sortBy=='createdAt'}">作成日</option>
+            </select>
+            <select name="order">
+                <option value="asc" th:selected="${order=='asc'}">昇順</option>
+                <option value="desc" th:selected="${order=='desc'}">降順</option>
+            </select>
+            <button type="submit" >検索</button>
+            <a th:href="@{/tasks/refresh}">元に戻す</a>
+        </div>
     </form>
     
     <!--

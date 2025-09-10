@@ -112,6 +112,7 @@ public class TaskService {
 		spec = spec.and(TaskSpecifications.statusEquals(form.getStatus()));
 		spec = spec.and(TaskSpecifications.categoryEquals(form.getCategory()));
 		spec = spec.and(TaskSpecifications.priorityEquals(form.getPriority()));
+		spec = spec.and(TaskSpecifications.dueDateBetween(form.getStartDate(), form.getEndDate()));
 		// ソートの設定
 		Sort sort = order.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
 		

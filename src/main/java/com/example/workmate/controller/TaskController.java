@@ -98,9 +98,6 @@ public class TaskController {
 		// 送られてきたデータをtaskに格納
 		Task task = Task.fromForm(taskForm);
 		
-		//Account loginUser = userDetails.getAccount();
-		//task.setUser(loginUser);
-		//taskRepository.save(task);
 		taskService.saveTask(task);
 		return "redirect:/tasks/tasklist";
 	}
@@ -123,6 +120,8 @@ public class TaskController {
 							  @RequestParam(required = false) String priority,
 							  @RequestParam(defaultValue = "dueDate") String sortBy,
 							  @RequestParam(defaultValue = "asc") String order,
+							  @RequestParam(required = false) LocalDate startDate,
+							  @RequestParam(required = false) LocalDate endDate,
 							  Model model) {
 				
 
@@ -146,6 +145,9 @@ public class TaskController {
 				info.setYearMonth(ym);
 			}
 		}
+		info.setStartDate(startDate);
+		info.setEndDate(endDate);
+		
 		List<Task> filterTasks = taskService.searchAndSortTasks(info, sortBy, order);
 		
 		model.addAttribute("tasks", filterTasks);
