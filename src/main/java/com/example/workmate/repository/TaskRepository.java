@@ -1,6 +1,7 @@
 package com.example.workmate.repository;
 
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -22,6 +23,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificat
 			"t.priority LIKE %:keyword% OR " +
 			"t.category LIKE %:keyword%")
 	List<Task> searchAllField(@Param("keyword")String keyword);
+	List<Task> findByUserAndDueDateBetween(Account account, LocalDate start, LocalDate end);
 	
 
 }

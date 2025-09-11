@@ -1,7 +1,10 @@
 package com.example.workmate.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -299,8 +302,51 @@ public class TaskService {
 
 	public String commandStatsAction(Command command) {
 		Account loginUser = getLoginUser();
-		
-		List<Task> tasks = taskRepository.findByUser(loginUser);
+		List<Task> tasks = new ArrayList<Task>();
+		if(!command.getOptions().isEmpty()) {
+			String rowCommand = command.getOptions().get("arg");
+			String period = CommandAlias.normalizeTimeRange(rowCommand);
+ 			LocalDate today = LocalDate.now();
+			
+			LocalDate start;
+			LocalDate end;
+			
+			switch(period) {
+			case "today":
+				start = today;
+				end = today;
+				break;
+			case "tomorrow":
+				start = today.plusDays(1);
+				end = start;
+				break;
+			case "week":
+				start = today.with(DayOfWeek.MONDAY);
+				end = today.with(DayOfWeek.SUNDAY);
+				break;
+			case "month":
+				start = today.with(TemporalAdjusters.firstDayOfMonth());
+				end = today.with(TemporalAdjusters.lastDayOfMonth());
+			default:
+				if(period.matches("\\d{4}-\\d{2}")) {
+					YearMonth ym = YearMonth.parse(period);
+					start = ym.atDay(1);
+					end = ym.atEndOfMonth();
+				}
+				else {
+					return "期間指定が正しくありません。 今日, 明日, 週, yyyy-MM 形式で指定してください";
+				}
+			}
+			tasks = taskRepository.findByUserAndDueDateBetween(loginUser, start, end);
+		}
+		else {
+			tasks = taskRepository.findByUser(loginUser);
+		}
+		String stats = formatStats(tasks);
+		return stats;
+	}	
+	
+	public String formatStats(List<Task> tasks) {	
 		// 全体の進捗集計
 		int statusTodo = 0;
 		int statusDoing = 0;

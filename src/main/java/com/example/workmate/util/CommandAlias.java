@@ -137,7 +137,11 @@ public class CommandAlias {
 			Map.entry("doing", "doing"),
 			Map.entry("進行中", "doing"),
 			Map.entry("todo", "todo"),
-			Map.entry("未着手", "todo")
+			Map.entry("未着手", "todo"),
+			
+			Map.entry("stats", "stats"),
+			Map.entry("統計", "stats"),
+			Map.entry("データ", "stats")
 	
 			);
 	
@@ -157,6 +161,16 @@ public class CommandAlias {
 	private static final Map<String, String> SORT_VALUE_ALIASES = Map.of(
 			"昇順", "asc",
 			"降順", "desc"
+			);
+	
+	private static final Map<String, String> TIMERANGE_ALIASES = Map.of(
+			"today", "today",
+			"今日", "today",
+			"tomorrow", "tomorrow",
+			"明日", "tomorrow",
+			"week", "week",
+			"週間", "week",
+			"週", "week"
 			);
 	
 	public static String normalizeKey(String key) {
@@ -192,14 +206,14 @@ public class CommandAlias {
 		return PRIORITY_VALUE_ALIASES.getOrDefault(key, key);
 	}
 	
-//	public static String normalizeCategory(String input) {
-//		String key = normalizeKey(input);
-//		return CATEGORY_ALIASES.getOrDefault(key, key);
-//	}
-	
 	public static String normalizeSortOption(String input) {
 		String key = normalizeKey(input);
 		return SORT_VALUE_ALIASES.getOrDefault(key, key);
+	}
+	
+	public static String normalizeTimeRange(String input) {
+		String key = normalizeKey(input);
+		return TIMERANGE_ALIASES.getOrDefault(key, key);
 	}
 
 }
