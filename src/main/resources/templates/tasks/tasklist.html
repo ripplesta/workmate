@@ -24,7 +24,7 @@
                 let y = date.getFullYear();
                 let m = String(date.getMonth() + 1).padStart(2, '0');
                 let d = String(date.getDate()).padStart(2, '0');
-                return '${y}-${m}-${d}';
+                return `${y}-${m}-${d}`;
             }
             function setRenge(type){
                 const start = document.querySelector('input[name="startDate"]');
@@ -32,17 +32,21 @@
                 const today = new Date();
 
                 if(type === 'today') {
-                    start.value = today.toISOString().split('T')[0];
-                    end.value = today.toISOString().split('T')[0];
+                    //start.value = today.toISOString().split('T')[0];
+                    //end.value = today.toISOString().split('T')[0];
+                    start.value = formatLocalDate(today);
+                    end.value = formatLocalDate(today);
                 } 
                 else if(type === 'week') {
-                    start.value = today.toISOString().split('T')[0];
+                    //start.value = today.toISOString().split('T')[0];
+                    start.value = formatLocalDate(today);
                     let weekLater = new Date(today);
                     weekLater.setDate(today.getDate() + 7);
                     end.value = formatLocalDate(weekLater);
                 }
                 else if(type === 'month') {
-                    start.value = today.toISOString().split('T')[0];
+                    //start.value = today.toISOString().split('T')[0];
+                    start.value = formatLocalDate(today);
                     let endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
                     end.value = formatLocalDate(endOfMonth);
                 }
