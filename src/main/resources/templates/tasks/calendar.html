@@ -14,7 +14,9 @@
         </tr>
         <tr th:each="week : ${weeks}">
             <td th:each="day :${week}">
-                <div th:if="${day
+                <div th:if="${day.equals(today)}>
+                    <div class="today"></div>
+                </div>
                 <div th:if="${day != null}">
                     <div class="day-number" th:text="${#temporals.format(day, 'd')}"></div>
                     <ul>
