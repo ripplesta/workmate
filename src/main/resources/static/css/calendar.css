@@ -1,0 +1,38 @@
+table.calendar {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.calendar th, table.calendar td {
+    border: 1px solid #ccc;
+    width: 14.28%; /* 7列で100%　*/
+    vertical-align: top;
+    height: 100px;
+    padding: 4px;
+}
+
+table.calendar th {
+    background: #d3f3fd;
+}
+/* 日曜日 */
+table.calendar td:nth-child(1) {
+    background: #fff0f0;
+}
+/* 土曜日 */
+table.calendar td:nth-child(7) {
+    background: #f0f0ff;
+}
+
+.day-number {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.task {
+    font-size: 12px;
+    background: #e6f7ff;
+    margin: 2px 0;
+    padding: 2px 4px;
+    border-radius: 3px;
+    display: block;
+}

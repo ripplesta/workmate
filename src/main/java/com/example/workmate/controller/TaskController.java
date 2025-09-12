@@ -2,9 +2,15 @@ package com.example.workmate.controller;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -179,6 +185,47 @@ public class TaskController {
 		model.addAttribute("tasks", taskList);
 		return "redirect:/tasks/tasklist";
 	}
+	
+	@GetMapping("/calendar")
+	public String showCalendar(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM")LocalDate month, 
+			Model model) {
+		LocalDate today = LocalDate.now();
+		LocalDate firstDay = (month != null ? month.withDayOfMonth(1) : today.withDayOfMonth(1));
+		LocalDate lastDay = firstDay.plusMonths(1).minusDays(1);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		AccountUserDetails userDetails = (AccountUserDetails) auth.getPrincipal();
+		Account loginUser = userDetails.getAccount();
+		
+		// 1日から最終日までの日付リストを生成
+		List<LocalDate> days = firstDay.datesUntil(lastDay.plusDays(1)).toList();
+		
+		// タスクを日付ごとにまとめる
+		List<Task> tasks = taskRepository.findByUser(loginUser);
+		Map<LocalDate, List<Task>> tasksByDate = tasks.stream()
+				.filter(t -> t.getDueDate() != null)
+				.collect(Collectors.groupingBy(Task::getDueDate));
+		
+		// 月の最初の週に空白を追加(前の月分)
+		int dayOfWeekValue = firstDay.getDayOfWeek().getValue();
+		int shift = dayOfWeekValue % 7;
+		List<LocalDate> paddedDays = new ArrayList<>();
+		for(int i = 0; i < shift; i++) {
+			paddedDays.add(null);
+		}
+		paddedDays.addAll(days);
+		
+		// 1週間もリストで用意する
+		List<List<LocalDate>> weeks = new ArrayList<>();
+		for(int i = 0; i < paddedDays.size(); i += 7) {
+			weeks.add(paddedDays.subList(i, Math.min(i + 7, paddedDays.size())));
+		}
+		
+		model.addAttribute("days", paddedDays);
+		model.addAttribute("tasksByDate", tasksByDate);
+		model.addAttribute("month", firstDay);
+		model.addAttribute("weeks", weeks);
+		return "tasks/calendar";
+		}
 }
 
 	
