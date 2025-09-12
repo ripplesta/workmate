@@ -220,6 +220,7 @@ public class TaskController {
 			weeks.add(paddedDays.subList(i, Math.min(i + 7, paddedDays.size())));
 		}
 		
+		model.addAttribute("today", today);
 		model.addAttribute("days", paddedDays);
 		model.addAttribute("tasksByDate", tasksByDate);
 		model.addAttribute("month", firstDay);
