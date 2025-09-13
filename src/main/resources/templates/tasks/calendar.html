@@ -18,15 +18,12 @@
                 <div th:if="${day != null}">
                     <div class="day-number" th:text="${#temporals.format(day, 'd')}"></div>
                     <ul>
-                        <!--<li th:each="task : ${tasksByDate.get(day)}" 
-                            th:text="${task.title}" class="task"
-                            th:classappend="${task.status != '完了' && task.dueDate.isBefore(today)} ? ' overdue'"
-                            th:classappend="${task.status == '完了'} ? 'complete'"
-                            th:classappend="${task.dueDate == today} ? 'due-today'" 
-                            ></li>-->
                         <li th:each="task : ${tasksByDate.get(day)}" 
                             th:text="${task.title}" class="task"
-                            ></li>
+                            th:classappend="${task.status != '完了' && task.dueDate.isBefore(today)} ? ' overdue'"
+                            th:classappend="${task.status == '完了'} ? ' complete'"
+                            th:classappend="${task.dueDate == today} ? ' due-today'">
+                        </li>
                     </ul>
                 </div>
                 <div th:if="${day == null}">&nbsp;</div> <!-- 空白セル用 -->
