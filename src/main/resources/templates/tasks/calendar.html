@@ -14,7 +14,7 @@
         </tr>
         <tr th:each="week : ${weeks}">
             <td th:each="day :${week}">
-                <div th:if="${day.equals(today)}>
+                <div th:if="${day eq today}>
                     <div class="today"></div>
                 </div>
                 <div th:if="${day != null}">
