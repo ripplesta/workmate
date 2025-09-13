@@ -13,17 +13,19 @@
             <th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th>
         </tr>
         <tr th:each="week : ${weeks}">
-            <td th:each="day :${week}">
-                <div th:if="${day eq today}>
-                    <div class="today"></div>
-                </div>
+            <td th:each="day :${week}" th:classappend="${day == today} ? ' today'">
+                
                 <div th:if="${day != null}">
                     <div class="day-number" th:text="${#temporals.format(day, 'd')}"></div>
                     <ul>
+                        <!--<li th:each="task : ${tasksByDate.get(day)}" 
+                            th:text="${task.title}" class="task"
+                            th:classappend="${task.status != '完了' && task.dueDate.isBefore(today)} ? ' overdue'"
+                            th:classappend="${task.status == '完了'} ? 'complete'"
+                            th:classappend="${task.dueDate == today} ? 'due-today'" 
+                            ></li>-->
                         <li th:each="task : ${tasksByDate.get(day)}" 
                             th:text="${task.title}" class="task"
-                            th:classappend="${status != '完了' && dueDate.isBefore(today)} ? 'overdue'"
-                             th:classappend="${status 
                             ></li>
                     </ul>
                 </div>
@@ -32,6 +34,6 @@
         </tr>
     </table>
     <div th:each="entry : ${tasksByDate.entrySet()}" 
-    th:text="${entry.key} + ' -> ' + ${#lists.size(entry.value)} + '件'"></div>
+    th:text="${entry.key} + ' -> ' +  ${#lists.size(entry.value)} + '件'"></div>
 </body>
 </html>

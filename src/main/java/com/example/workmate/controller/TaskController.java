@@ -225,6 +225,7 @@ public class TaskController {
 		model.addAttribute("tasksByDate", tasksByDate);
 		model.addAttribute("month", firstDay);
 		model.addAttribute("weeks", weeks);
+		model.addAttribute("tasks", tasks);
 		return "tasks/calendar";
 		}
 }
