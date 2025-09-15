@@ -222,7 +222,7 @@ public class TaskController {
 			weeks.add(paddedDays.subList(i, Math.min(i + 7, paddedDays.size())));
 		}
 		
-		// カレンダーに進捗が完了済みや日付などでタスクの状況を判定したものを用意
+		// 進捗が完了済みや日付などでタスクの状況を判定するidのセットを用意
 		Set<Long> overdueTaskIds = new HashSet<>();
 		for(Task t : tasks) {
 			if(t.getDueDate() != null && t.getDueDate().isBefore(today) && t.getStatus().equals("完了")) {
