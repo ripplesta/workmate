@@ -244,11 +244,11 @@ public class TaskController {
 			}
 		}
 	
+		model.addAttribute("today", today);
 		model.addAttribute("days", paddedDays);
 		model.addAttribute("tasksByDate", tasksByDate);
 		model.addAttribute("month", firstDay);
 		model.addAttribute("weeks", weeks);
-		model.addAttribute("tasks", tasks);
 		model.addAttribute("overdueTaskIds", overdueTaskIds);
 		model.addAttribute("completeTaskIds", completeTaskIds);
 		model.addAttribute("dueTodayTaskIds", dueTodayTaskIds);
