@@ -20,9 +20,10 @@
                     <ul>
                         <li th:each="task : ${tasksByDate.get(day)}" 
                             th:text="${task.title}" class="task"
-                            th:classappend="${overdueTaskIds.contains(task.id)} ? ' overdue' : ''"
-                            th:classappend="${completeTaskIds.contains(task.id)} ? ' complete' : ''"
-                            th:classappend="${dueTodayTaskIds.contains(task.id)} ? ' due-today' : ''">
+                            th:classappend="${overdueTaskIds.contains(task.id) ? ' overdue' :
+                            (completeTaskIds.contains(task.id) ? ' complete' : 
+                            (dueTodayTaskIds.contains(task.id) ? ' due-today' : ''))
+                        }">
                         </li>
                     </ul>
                 </div>

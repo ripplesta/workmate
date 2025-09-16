@@ -225,7 +225,7 @@ public class TaskController {
 		// 進捗が完了済みや日付などでタスクの状況を判定するidのセットを用意
 		Set<Long> overdueTaskIds = new HashSet<>();
 		for(Task t : tasks) {
-			if(t.getDueDate() != null && t.getDueDate().isBefore(today) && t.getStatus().equals("完了")) {
+			if(t.getDueDate() != null && t.getDueDate().isBefore(today) && !t.getStatus().equals("完了")) {
 				overdueTaskIds.add(t.getId());
 			}
 		}

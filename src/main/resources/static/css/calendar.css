@@ -39,7 +39,7 @@ table.calendar td:nth-child(7) {
 
 .today {
     border: 2px solid red;
-     border-radius: 2px;
+    border-radius: 2px;
 }
 
 .overdue {
