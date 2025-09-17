@@ -268,9 +268,9 @@
   - CommandAliasクラスを作成してMapを用意し`Map.entry("タイトル","title")`などをいれて表記ゆれに対応させる
     - `Map.of`でもできるが10個以上記述するとエラーになるので`Map.entry`と使い分ける
     - メソッドを作成し`return ACTION_ALIASES.getOrDefault(key, key)`のようにして返す
-    - CommandParserに`String nomalizedKey = CommandAlias.normalizeField(value[0].trim())`
+    - CommandParserに`String nomalizedKey=CommandAlias.normalizeField(value[0].trim())`
 	  `options.put(nomalizedKey, value[1].trim());`のように通すと表記ゆれがある程度直せる
-  - 全体の進捗の集計にはMap<String, Map<String, Integer>>のようにMapの中にさらにMapを用意してfor文で進捗を完了・進行中・未着手でカウントしたものをカテゴリ別にさらにカウントさせる
+  - 全体の進捗の集計には`Map<String, Map<String, Integer>>`のようにMapの中にさらにMapを用意してfor文で進捗を完了・進行中・未着手でカウントしたものをカテゴリ別にさらにカウントさせる
 
 ## 8週目(9/8~9/15)
 ### タスク管理実装記録
