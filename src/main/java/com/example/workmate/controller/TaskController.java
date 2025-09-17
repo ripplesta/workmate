@@ -3,8 +3,10 @@ package com.example.workmate.controller;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -220,11 +222,37 @@ public class TaskController {
 			weeks.add(paddedDays.subList(i, Math.min(i + 7, paddedDays.size())));
 		}
 		
+		// 進捗が完了済みや日付などでタスクの状況を判定するidのセットを用意
+		Set<Long> overdueTaskIds = new HashSet<>();
+		for(Task t : tasks) {
+			if(t.getDueDate() != null && t.getDueDate().isBefore(today) && !t.getStatus().equals("完了")) {
+				overdueTaskIds.add(t.getId());
+			}
+		}
+		
+		Set<Long> completeTaskIds = new HashSet<>();
+		for(Task t : tasks) {
+			if(t.getStatus().equals("完了")) {
+				completeTaskIds.add(t.getId());
+			}
+		}
+		
+		Set<Long> dueTodayTaskIds = new HashSet<>();
+		for(Task t : tasks) {
+			if(t.getDueDate() != null && t.getDueDate().isEqual(today)) {
+				dueTodayTaskIds.add(t.getId());
+			}
+		}
+	
 		model.addAttribute("today", today);
 		model.addAttribute("days", paddedDays);
 		model.addAttribute("tasksByDate", tasksByDate);
 		model.addAttribute("month", firstDay);
 		model.addAttribute("weeks", weeks);
+		model.addAttribute("overdueTaskIds", overdueTaskIds);
+		model.addAttribute("completeTaskIds", completeTaskIds);
+		model.addAttribute("dueTodayTaskIds", dueTodayTaskIds);
+		
 		return "tasks/calendar";
 		}
 }

@@ -96,6 +96,7 @@ public class CommandAlias {
 			Map.entry("limit", "dueDate"),
 			
 			Map.entry("status", "status"),
+			Map.entry("状態", "status"),
 			Map.entry("進捗", "status"),
 			Map.entry("作業", "status"),
 			

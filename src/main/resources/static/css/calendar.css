@@ -36,3 +36,23 @@ table.calendar td:nth-child(7) {
     border-radius: 3px;
     display: block;
 }
+
+.today {
+    border: 2px solid red;
+    border-radius: 2px;
+}
+
+.overdue {
+    color: red;
+    font-weight: bold;
+}
+
+.due-today {
+    color: orange;
+    font-weight: bold;
+}
+
+.complete {
+    color: gray;
+    text-decoration: line-through;
+}
