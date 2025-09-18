@@ -269,7 +269,7 @@
     - `Map.of`でもできるが10個以上記述するとエラーになるので`Map.entry`と使い分ける
     - メソッドを作成し`return ACTION_ALIASES.getOrDefault(key, key)`のようにして返す
     - CommandParserに`String nomalizedKey=CommandAlias.normalizeField(value[0].trim())`
-	  `options.put(nomalizedKey, value[1].trim());`のように通すと表記ゆれがある程度直せる
+	  `options.put(nomalizedKey, value[1].trim())`のように通すと表記ゆれがある程度直せる
   - 全体の進捗の集計には`Map<String, Map<String, Integer>>`のようにMapの中にさらにMapを用意してfor文で進捗を完了・進行中・未着手でカウントしたものをカテゴリ別にさらにカウントさせる
 
 ## 8週目(9/8~9/15)
@@ -282,4 +282,24 @@
   #### メモ
   - 検索が複雑になってきたのでTaskSearchFormという検索用DTOを用意した
   - 期限を参照して今月中や1週間の間のタスクも絞れると便利だと思いボタン形式で実装した
+    - 検索用にstartDateとendDateをLocalDate型で追加しこれを受け渡すことで期限日を参照した範囲で絞れる
+    - JSを利用し最初はtoISOString()で取得していたが時差の都合？で日時がズレたりするのでformatを用意した
+      - `let y = date.getFullYear()`
+      - `let m = String(date.getMonth() + 1).padStart(2, '0')`
+      - `let d = String(date.getDate()).padStart(2, '0')`
+      - `return` `${y}-${m}-${d}`と返す
+  - カレンダーをテーブルタグなどを使って用意
+    - コントローラー側で日付のリストやタスクを用意して渡す
+    - 日付はLocalDate型を利用しLocalDate.now()で現在の時間を取得
+    - 月をパラメータで送り、nullなら今月を取得し1日~最終日をリストに格納
+    - 月の初めは何曜日か固定されていないので月の1日が何曜日かを求める
+      - `.getDayOfWeek().getValue()`で取得すると月曜日が1・火曜日が2…日曜日が7と返る
+      - `% 7`で余りを出しその数値分最初にnullをリストに詰めてから1～最終日を格納すると1日がカレンダー通りの曜日になる
+      - 1週間ごとの日数もリストで用意してフロント側でリストの数値分forでループさせる(例：nullも含めるので最終日が31日で空白が4なら7・14・21・28・35)
+  - タスクもMapを用意してKeyに期限日・value側にタスクの情報をリストでまとめて用意する
+  - thymeleafだと複雑な条件指定はできないみたいなのでこちらもコントローラー側で処理して情報を渡す
+    - 例：期限日が今日より前かつ進捗が完了じゃないものをリストでTask.idでまとめる
+  - 渡した情報でフロント側でループさせてカレンダーを作ったり、タスク名をカレンダーに表示させた
+    - このループの中でさらに条件を指定してth:classappnedでクラスを付与し、cssで文字の色を変えたり背景の色を変えたりして見やすくする
+  - この日付の概念はよく使われると思うのでもっと学習していきたい
   
