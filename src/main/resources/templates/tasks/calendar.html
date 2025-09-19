@@ -15,7 +15,7 @@
         <tr th:each="week : ${weeks}">
             <td th:each="day :${week}" th:classappend="${day == today} ? ' today'">
                 
-                <div th:if="${day != null}">
+                <div th:if="${day != null} ">
                     <div class="day-number" th:text="${#temporals.format(day, 'd')}"></div>
                     <ul>
                         <li th:each="task : ${tasksByDate.get(day)}" 

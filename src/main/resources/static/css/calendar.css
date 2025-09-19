@@ -37,9 +37,9 @@ table.calendar td:nth-child(7) {
     display: block;
 }
 
-.today {
-    border: 2px solid red;
-    border-radius: 2px;
+td.today {
+    border: 2px solid red !important;
+    background-color: #ffeaa7;
 }
 
 .overdue {
