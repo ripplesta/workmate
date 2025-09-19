@@ -188,14 +188,8 @@ public class CommandAlias {
 	
 	public static String normalizeField(String input) {
 		String key = normalizeKey(input);
-		System.out.println(key);
 		return FIELD_ALIASES.getOrDefault(key, key);
 	}
-	
-//	public static String normalizeDueDate(String input) {
-//		String key = normalizeKey(input);
-//		return DUEDATE_ALIASES.getOrDefault(key, key);
-//	}
 	
 	public static String normalizeStatus(String input) {
 		String key = normalizeKey(input);
