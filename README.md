@@ -45,7 +45,7 @@
 - mvn spring-boot:run
 
 5.ブラウザでアクセス
-- http://localhost:8080/
+- http://localhost:8080/homw
 
 ## 工夫した点
 - コマンド入力時の柔軟なパース
