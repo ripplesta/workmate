@@ -24,19 +24,6 @@ public class ChatBotService {
 	
 	private final BotResponseRepository botResponseRepository;
 	
-//	private final Map<String, String> chitChatResponses = Map.ofEntries(
-//			Map.entry("おはよう", "おはようございます！今日も一緒に頑張りましょう"),
-//			Map.entry("こんにちは", "こんにちは！今日はどんな一日になりそうですか？"),
-//			Map.entry("おやすみ", "おやすみなさい　明日も頑張りましょう"),
-//			Map.entry("疲れた", "お疲れ様です。ちょっと休憩して、深呼吸しましょう"),
-//			Map.entry("やる気がない", "無理せず、小さなことから始めてみませんか？"),
-//			Map.entry("天気がいい", "そうですね！こんな日に気分も上がりますね！"),
-//			Map.entry("雨", "雨の日は室内作業に集中するチャンスですよ"),
-//			Map.entry("暑い", "水分補給を忘れずに！冷たい飲み物でもどうぞ"),
-//			Map.entry("寒い", "温かい飲み物や厚着をして体を温めましょう"),
-//			Map.entry("お腹すいた", "作業の合間にちょっと軽食をどうぞ")
-//	);
-	
 	public ChatBotService(ChatMessageRepository chatRepository, BotResponseRepository botResRepository) {
 		this.chatMessageRepository = chatRepository;
 		this.botResponseRepository = botResRepository;
@@ -165,21 +152,6 @@ public class ChatBotService {
 		return responses.get(0).getTemplateText();
 	}
 	
-//	private String taskManegement(String userInput) {
-//		
-//		// タスク管理コマンド判定
-//		// あとでコントローラーにかいたCRUD処理をサービスに切り分けサービスを適用する
-//		if(userInput.contains("タスク追加")) {
-//			return taskService.addTask(userInput);
-//		}
-//		else if(userInput.contains("タスク一覧")) {
-//			return taskService.listTasks();
-//		}
-//		else if(userInput.contains("タスク削除")) {
-//			return taskService.deleteTask(userInput);
-//		}
-//		
-//		return generateReply(userInput);
 	
 	// チャットの返答を作成
 	private String generateReply(String userInput) {

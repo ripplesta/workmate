@@ -14,8 +14,7 @@ import com.example.workmate.domain.Task;
 
 public interface TaskRepository extends JpaRepository<Task, Long>, JpaSpecificationExecutor<Task> {
 	List<Task> findByUser(Account account);
-	// すでにJpaRepositoryで継承しているため明示的に書かなくてもよい
-    // Optional<Task> findById(Long id);
+
 	@Query("SELECT t FROM Task t WHERE " +
 			"t.title LIKE %:keyword% OR " +
 			"t.description LIKE %:keyword% OR " +

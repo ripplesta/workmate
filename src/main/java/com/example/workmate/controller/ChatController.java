@@ -58,6 +58,7 @@ public class ChatController {
 		Command command = parser.parse(message);
 		String action = CommandAlias.normalizeAction(command.getAction());
 		
+		// コマンドアクション
 		if(action.equals("list")) {
 			List<Task> tasks = taskService.commandListAction(command);
 			String response = taskService.formatResponse(tasks);
@@ -96,6 +97,7 @@ public class ChatController {
 			chatBotService.handleUserMessage(loginUser, message, response);
 		}
 		
+		// コマンドじゃないなら雑談系に分岐
 		else {
 			chatBotService.handleUserMessage(loginUser, message);
 		}
