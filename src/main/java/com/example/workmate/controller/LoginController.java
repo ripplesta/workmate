@@ -25,7 +25,7 @@ public class LoginController {
 	
 	
 	@GetMapping("/logout-success")
-	public String logoutSuccess() {
+	public String logoutSuccesh() {
 		return "logout";
 	}
 

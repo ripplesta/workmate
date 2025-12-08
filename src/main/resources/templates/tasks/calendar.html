@@ -5,8 +5,8 @@
     <link rel="stylesheet" th:href="@{/css/calendar.css}">
 </head>
 <body>
-    <h1>スケジュールカレンダー</h1>
-    <h2 th:text="${#temporals.format(month, 'yyyy年MM月')}"></h2>
+    <h1 style="text-align: center;">スケジュールカレンダー</h1>
+    <h2 style="text-align: center;" th:text="${#temporals.format(month, 'yyyy年MM月')}"></h2>
 
     <table class="calendar">
         <tr>

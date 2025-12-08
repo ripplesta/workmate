@@ -3,12 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>WorkMate チャット</title>
-    <!-- Spring bootはこっち -->
     <link rel="stylesheet" th:href="@{/css/chat.css}">
 
-    <!-- Live previewでみたいときはこっちを使う　
-    <link rel="stylesheet" href="../../static/css/chat.css">
--->
 </head>
 <body>
     
@@ -39,20 +35,6 @@
         // ページ読み込み時に一番下へスクロール
         window.onload = scrollToBottom;
 
-        
-        // // 送信ボタンを押したらメッセージ＋スクロール
-        // document.getElementById("sendButton").addEventListener("click", function() {
-        //     const input = document.getElementById("messageInput");
-        //     const newMessage = document.createElement("div");
-        //     newMessage.classList.add("message", "user");
-        //     newMessage.textContent = input.value;
-
-        //     document.getElementById("messages").appendChild(newMessage);
-        //     input.value = "";
-
-        //     // 最新までスクロール
-        //     scrollToBottom();
-        // })
     </script>
 </body>
 </html>

@@ -4,7 +4,7 @@
     <title>タスク管理</title>
 </head>
 <body>
-    <h1>タスク一覧</h1>
+    <h1 style="text-align: center;">タスク一覧</h1>
     <form th:action="@{/tasks/search}" method="get">
         <div>
             タイトル：<input type="text" name="title" th:value="${title}" placeholder="キーワードを入力">
